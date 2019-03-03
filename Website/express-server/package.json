@@ -1,0 +1,19 @@
+{
+  "name": "ggv-express-server",
+  "version": "1.0.0",
+  "description": "Backend for GGV Website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Fraser Watt",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-session": "^1.3.3",
+    "express": "^4.16.4",
+    "mysql": "^2.16.0",
+    "passport": "^0.4.0",
+    "passport-steam": "^1.0.10"
+  }
+}
