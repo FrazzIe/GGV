@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "connect-history-api-fallback": "^1.6.0",
     "cookie-session": "^1.3.3",
     "express": "^4.16.4",
     "mysql": "^2.16.0",
