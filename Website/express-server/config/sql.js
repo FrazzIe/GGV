@@ -5,5 +5,12 @@ module.exports = {
 	topDeaths: "SELECT statistic.deaths, player.name, player.steam FROM statistic JOIN player ON statistic.player_id = player.id ORDER BY statistic.deaths LIMIT 10",
 	topWins: "SELECT statistic.wins, player.name, player.steam FROM statistic JOIN player ON statistic.player_id = player.id ORDER BY statistic.wins LIMIT 10",
 	topLosses: "SELECT statistic.games_played - statistic.wins As 'losses', player.name, player.steam FROM statistic JOIN player ON statistic.player_id = player.id ORDER BY 'losses' LIMIT 10",
+	execute: function(sql, params, connection) {
+	  return new Promise((resolve, reject) => {
+	    connection.query(sql, params, (error, result, fields) => {
+	      if (error) reject(error);
+	      resolve(result);
+	    });
+	  });
 	}
 }
