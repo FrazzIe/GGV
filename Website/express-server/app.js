@@ -69,3 +69,7 @@ app.get("/api/user", function(req, res) {
       res.send({user: false});
     }
 });
+
+app.listen(3000, () => {  
+  console.log("ggv app listening on port 3000")
+})
