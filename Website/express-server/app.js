@@ -20,3 +20,7 @@ app.use(cookieSession({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.get("/", (req, res, next) => {
+  res.sendFile("index.html", { root: publicRoot})
+})
