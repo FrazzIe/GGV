@@ -1,0 +1,4 @@
+CitizenFX.Core.Client.dll
+CitizenFX.Core.Server.dll
+*.xml
+*.pdb
