@@ -61,3 +61,11 @@ app.get("/logout", function(req, res) {
   req.logout();
   res.redirect("/");
 });
+
+app.get("/api/user", function(req, res) {
+    if(req.isAuthenticated()) {
+      res.send({user: req.session.passport.user});
+    } else {
+      res.send({user: false});
+    }
+});
