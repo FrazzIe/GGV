@@ -37,10 +37,12 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+import axios from 'axios';
 
 export default {
   name: 'App',
   components: {
+
   },
   data () {
     return {
@@ -53,6 +55,22 @@ export default {
       return new Date().getFullYear();
     }
   },
+  methods: {
+    ...mapMutations(['setUser']),
+    getUser() {
+      let self = this
+      axios.get("/api/user").then((resp) => {
+        if(resp.data.user) {
+          self.setUser(resp.data.user);
+        }
+      }).catch((err) => {
+        console.log(err);
+        self.$router.push("/");
+      });
+    },
+  },
+  mounted(){
+    this.getUser();
   }
 }
 </script>
