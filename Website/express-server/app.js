@@ -1,8 +1,9 @@
 const express = require('express');
 const cookieSession = require('cookie-session');
 const bodyParser = require('body-parser');
+const passportSetup = require('./config/passport-setup');
 const passport = require('passport');
-const SteamStrategy = require('passport-steam').Strategy;
+
 const keys = require('./config/keys');
 
 const publicRoot = '../vue-client/dist';
