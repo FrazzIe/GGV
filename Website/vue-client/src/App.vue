@@ -27,6 +27,9 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
+      <a href="/login" v-if="!user">
+        <img src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png">
+      </a>
     </v-toolbar>
 
     <v-content>
