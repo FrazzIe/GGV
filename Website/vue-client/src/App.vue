@@ -1,5 +1,25 @@
 <template>
   <v-app>
+    <v-navigation-drawer clipped v-model="drawer" :width="250" app>
+      <v-list>
+        <v-list-tile v-for="page in navigation" :key="page.title" :to="page.route">
+          <v-list-tile-action>
+            <v-icon>{{ page.icon }}</v-icon>
+          </v-list-tile-action>
+
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ page.title }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+      
+      <v-footer class="justify-center pl-0" color="primary" inset app>
+        <span style="color: white;">&copy; {{ currentYear }} &mdash; Fraser Watt</span>
+      </v-footer> 
+    </v-navigation-drawer>
+
     <v-toolbar app clipped-left>
       <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title class="headline">
@@ -16,6 +36,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'App',
@@ -23,8 +44,15 @@ export default {
   },
   data () {
     return {
-      //
+      drawer: true,
     }
+  },
+  computed: {
+    ...mapState(['navigation', 'userNavigation', 'user']),
+    currentYear(){
+      return new Date().getFullYear();
+    }
+  },
   }
 }
 </script>
