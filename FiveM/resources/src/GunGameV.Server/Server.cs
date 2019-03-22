@@ -12,12 +12,17 @@ namespace GunGameV.Server
     {
         public Server()
         {
-            EventHandlers["playerConnecting"] += new Action<Player, string, dynamic, dynamic>(OnPlayerConnecting);
         }
 
-        private void OnPlayerConnecting([FromSource]Player player, string playerName, dynamic setKickReason, dynamic deferrals)
+        [EventHandler("playerConnecting")]
+        private void OnPlayerConnecting([FromSource]Player player, string name, dynamic setKickReason, dynamic deferrals)
         {
             deferrals.defer();
+
+            deferrals.update("You have been haulted!");
+
+            deferrals.done("Get lost!");
+        }
         }
     }
 }
