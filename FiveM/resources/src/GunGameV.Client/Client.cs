@@ -11,9 +11,25 @@ namespace GunGameV.Client
     public class Client : BaseScript
     {
         private List<User> users = new List<User>();
+
         public Client()
         {
+            Debug.WriteLine("GGV CLIENT");
+        }
+
         public List<User> Users { get => users; }
+
+        [Tick]
+        private async Task OnPlayerReady()
+        {
+            await Delay(0);
+
+            if (NetworkIsSessionStarted())
+            {
+                TriggerServerEvent("GGV.Setup");
+                return;
+            }
+        }
         [EventHandler("GGV.Sync")]
         private void SyncUsers(string jsonUsers)
         {
