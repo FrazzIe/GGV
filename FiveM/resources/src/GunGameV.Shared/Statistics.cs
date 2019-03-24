@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace GunGameV.Shared
 {
@@ -14,6 +15,7 @@ namespace GunGameV.Shared
 
     public class GlobalStats : Statistics
     {
+        [JsonProperty]
         private int gamesPlayed;
 
         public GlobalStats(int kills = 0, int deaths = 0, int wins = 0, int _gamesPlayed = 0)
