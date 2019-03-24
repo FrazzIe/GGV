@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static CitizenFX.Core.Native.API;
 using CitizenFX.Core;
+using Newtonsoft.Json;
 using GunGameV.Shared;
 
 namespace GunGameV.Client
@@ -28,15 +29,23 @@ namespace GunGameV.Client
             if (NetworkIsSessionStarted())
             {
                 TriggerServerEvent("GGV.Setup");
-                return;
+                Tick -= OnPlayerReady;
             }
         }
         [EventHandler("GGV.Sync")]
         private void SyncUsers(string jsonUsers)
         {
-            users = (List<User>) Json.From(jsonUsers);
 
-            Debug.WriteLine(users[0].ToString());
+            users = JsonConvert.DeserializeObject<List<User>>(jsonUsers);
+
+            for (int i = 0; i < users.Count; i++)
+            {
+                Debug.WriteLine("-----------------");
+                Debug.WriteLine("User Index {0}", i);
+                Debug.WriteLine("User: {0}, {1}, {2}, {3}, {4}", users[i].ID, users[i].Name, users[i].Steam, users[i].License, users[i].IP);
+                Debug.WriteLine("Global Stats: {0}, {1}, {2}, {3}", users[i].globalStats.Kills, users[i].globalStats.Deaths, users[i].globalStats.Wins, users[i].globalStats.Loses);
+                Debug.WriteLine("Game Stats: {0}, {1}, {2}", users[i].gameStats.Kills, users[i].gameStats.Deaths, users[i].gameStats.Score);
+            }
         }
     }
 }
