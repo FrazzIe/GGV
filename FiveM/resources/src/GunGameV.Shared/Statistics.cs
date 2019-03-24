@@ -26,7 +26,7 @@ namespace GunGameV.Shared
             gamesPlayed = _gamesPlayed;
         }
         public int Wins { get; set; }
-        public int Loses { get => gamesPlayed - Wins; }
+        public int Loses { get => (gamesPlayed - Wins); }
     }
 
     public class GameStats : Statistics
