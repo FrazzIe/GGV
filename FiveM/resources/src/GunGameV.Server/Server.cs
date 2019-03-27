@@ -27,13 +27,13 @@ namespace GunGameV.Server
             deferrals.defer();
 
             deferrals.update("You have been haulted!");
-            Exports["jssql"].execute("SELECT * FROM player WHERE steam = ?", new[] { "523" }, new Action<dynamic>((result) => 
+
+            if (player.Identifiers["steam"] == null)
             {
-                Debug.WriteLine(result.GetType().FullName);
-                Debug.WriteLine(result[0].GetType().FullName);
-                Debug.WriteLine(result[0].steam);
-            }));
-            deferrals.done("");
+                deferrals.done("Steam must be running to connect to this server!");
+            }
+
+            deferrals.done();
         }
 
         [EventHandler("GGV.Setup")]
