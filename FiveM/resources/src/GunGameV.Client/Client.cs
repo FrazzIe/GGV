@@ -13,6 +13,7 @@ namespace GunGameV.Client
     public class Client : BaseScript
     {
         private List<User> users = new List<User>();
+        private Match currentMatch;
 
         public Client()
         {
@@ -32,7 +33,7 @@ namespace GunGameV.Client
                 Tick -= OnPlayerReady;
             }
         }
-        [EventHandler("GGV.Sync")]
+        [EventHandler("GGV.Sync.Users")]
         private void SyncUsers(string jsonUsers)
         {
 
@@ -46,6 +47,11 @@ namespace GunGameV.Client
                 Debug.WriteLine("Global Stats: {0}, {1}, {2}, {3}", users[i].globalStats.Kills, users[i].globalStats.Deaths, users[i].globalStats.Wins, users[i].globalStats.Loses);
                 Debug.WriteLine("Game Stats: {0}, {1}, {2}", users[i].gameStats.Kills, users[i].gameStats.Deaths, users[i].gameStats.Score);
             }
+        }
+        [EventHandler("GGV.Sync.Match")]
+        private void SyncMatch(string jsonMatch)
+        {
+            currentMatch = JsonConvert.DeserializeObject<Match>(jsonMatch);
         }
     }
 }
