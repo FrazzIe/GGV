@@ -29,5 +29,6 @@ namespace GunGameV.Shared
         public string Steam { get => steam; }
         public string License { get => license; }
         public string IP { get => ip; }
+        public bool InMatch { get; set; } = false;
     }
 }
