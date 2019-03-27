@@ -9,15 +9,7 @@ namespace GunGameV.Server
 {
     public static class Utilities
     {
-        public static string GetLicense(Player player) {
-            return player.Identifiers["license"];
-        }
-
-        public static string GetSteam(Player player)
         {
-            return player.Identifiers["steam"];
-        }
-
         public static string GetSteam64(Player player)
         {
             string steam = GetSteam(player);
@@ -29,10 +21,6 @@ namespace GunGameV.Server
             {
                 return null;
             }
-        }
-        public static string GetIP(Player player)
-        {
-            return player.Identifiers["ip"];
         }
         public static long GetUnixTimestamp()
         {
