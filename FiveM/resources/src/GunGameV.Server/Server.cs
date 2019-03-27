@@ -13,7 +13,8 @@ namespace GunGameV.Server
     public class Server : BaseScript
     {
         private List<User> users = new List<User>();
-        
+        private Match currentMatch;
+
         public Server()
         {
             Debug.WriteLine("SERVER STARTED");
@@ -69,7 +70,84 @@ namespace GunGameV.Server
             }
         }
 
+        [Command("ggv")]
+        private void OnGunGameVCommand(Player player, string[] args) {
+            User user = users.Find(x => x.ID == player.Handle);
 
+            if (user != null)
+            {
+                switch (args[0])
+                {
+                    case "start":
+                        if(currentMatch == null)
+                        {
+
+                        }
+                        else
+                        {
+                            player.TriggerEvent("chat:addMessage", new
+                            {
+                                color = new[] { 255, 0, 0 },
+                                multiline = true,
+                                args = new[] { "GGV", "A match is already in progress!" },
+                            });
+                        }
+                        break;
+                    case "join":
+                        if (currentMatch == null)
+                        {
+                            if (user.InMatch)
+                            {
+
+                            } else
+                                player.TriggerEvent("chat:addMessage", new
+                                {
+                                    color = new[] { 255, 0, 0 },
+                                    multiline = true,
+                                    args = new[] { "GGV", "You are already in a match!" },
+                                });
+                            {
+
+                            }
+                        }
+                        else
+                        {
+                            player.TriggerEvent("chat:addMessage", new
+                            {
+                                color = new[] { 255, 0, 0 },
+                                multiline = true,
+                                args = new[] { "GGV", "A match must be started to join one!" },
+                            });
+                        }
+                        break;
+                    case "leave":
+                        if (user.InMatch)
+                        {
+
+                        }
+                        else
+                        {
+                            player.TriggerEvent("chat:addMessage", new
+                            {
+                                color = new[] { 255, 0, 0 },
+                                multiline = true,
+                                args = new[] { "GGV", "You must be in a match to use this command!" },
+                            });
+                        }
+                        break;
+                    default:
+                        player.TriggerEvent("chat:addMessage", new
+                        {
+                            color = new[] { 255, 0, 0 },
+                            multiline = true,
+                            args = new[] { "GGV", "Invalid syntax: start, join or leave are the only accepted arguments!" },
+                        });
+                        break;
+                }
+            } else
+            {
+                player.Drop("Unable to find you in our users list? try rejoining!");
+            }
         }
     }
 }
