@@ -10,21 +10,12 @@ namespace GunGameV.Server
     public static class Utilities
     {
         {
-        public static string GetSteam64(Player player)
         {
-            string steam = GetSteam(player);
 
-            if (steam != null)
-            {
-                return Convert.ToInt32(steam, 16).ToString();
-            } else
-            {
-                return null;
-            }
-        }
-        public static long GetUnixTimestamp()
+        public static string GetSteam64(string hex)
         {
-            return DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            return Convert.ToInt32(hex, 16).ToString();
         }
+        public static long UnixTimestamp { get => DateTimeOffset.UtcNow.ToUnixTimeSeconds(); }
     }
 }
