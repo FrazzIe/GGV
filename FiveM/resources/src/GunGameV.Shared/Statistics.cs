@@ -31,11 +31,11 @@ namespace GunGameV.Shared
 
     public class GameStats : Statistics
     {
-        public GameStats(int kills = 0, int deaths = 0, int score = 0)
+        public GameStats()
         {
-            Kills = kills;
-            Deaths = deaths;
-            Score = score;
+            Kills = 0;
+            Deaths = 0;
+            Score = 0;
         }
         public int Score { get; set; }
     }
