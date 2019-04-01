@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static CitizenFX.Core.Native.API;
 using CitizenFX.Core;
+using CitizenFX.Core.Native;
 using Newtonsoft.Json;
 using GunGameV.Shared;
 
@@ -28,7 +28,7 @@ namespace GunGameV.Client
         {
             await Delay(0);
 
-            if (NetworkIsSessionStarted())
+            if (API.NetworkIsSessionStarted())
             {
                 TriggerServerEvent("GGV.Setup");
                 Tick -= OnPlayerReady;
