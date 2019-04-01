@@ -14,13 +14,12 @@ namespace GunGameV.Shared
         [JsonProperty]
         protected int length, scoreLimit;
         [JsonProperty]
-        protected List<string> weapons;
+        protected List<uint> weapons;
 
-        public string GetWeapon(int index)
+        public uint GetWeapon(int index)
         {
             return weapons[index];
         }
-
         public int ScoreLimit { get => scoreLimit; }
         public long StartTime { get => startTime; }
         public long EndTime { get => (startTime + length); }

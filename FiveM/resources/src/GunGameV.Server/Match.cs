@@ -14,14 +14,15 @@ namespace GunGameV.Server
             startTime = Utilities.UnixTimestamp;
             length = _length * 60;
             scoreLimit = _scoreLimit;
+            weapons = new List<uint>();
 
             Random random = new Random();
 
             while (weapons.Count != (scoreLimit - 1))
             {
-                string weapon = Utilities.Weapons[random.Next(0, Utilities.Weapons.Count - 1)];
+                uint weapon = Utilities.Weapons[random.Next(0, Utilities.Weapons.Count - 1)];
 
-                if(!weapons.Contains(weapon))
+                if (!weapons.Contains(weapon))
                 {
                     weapons.Add(weapon);
                 }
