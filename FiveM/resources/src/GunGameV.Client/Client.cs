@@ -56,5 +56,15 @@ namespace GunGameV.Client
         {
             unixTimestamp = _unixTimestamp;
         }
+        [EventHandler("GGV.Match.Join")]
+        private void JoinMatch()
+        {
+
+        }
+        [EventHandler("GGV.Match.Leave")]
+        private void LeaveMatch()
+        {
+
+        }
     }
 }
