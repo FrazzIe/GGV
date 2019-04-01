@@ -23,5 +23,6 @@ namespace GunGameV.Shared
         public int ScoreLimit { get => scoreLimit; }
         public long StartTime { get => startTime; }
         public long EndTime { get => (startTime + length); }
+        public User Winner { get; set; }
     }
 }
