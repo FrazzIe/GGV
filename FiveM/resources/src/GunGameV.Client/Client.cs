@@ -15,6 +15,7 @@ namespace GunGameV.Client
         private List<User> users = new List<User>();
         private User user;
         private Match currentMatch;
+        private long unixTimestamp = 0;
 
         public Client()
         {
@@ -49,6 +50,11 @@ namespace GunGameV.Client
         private void SyncMatch(string jsonMatch)
         {
             currentMatch = JsonConvert.DeserializeObject<Match>(jsonMatch);
+        }
+        [EventHandler("GGV.Sync.Time")]
+        private void SyncTime(long _unixTimestamp)
+        {
+            unixTimestamp = _unixTimestamp;
         }
     }
 }

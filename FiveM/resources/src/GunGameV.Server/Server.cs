@@ -19,7 +19,16 @@ namespace GunGameV.Server
         {
             Debug.WriteLine("SERVER STARTED");
         }
+        [Tick]
+        private async Task MatchWatcher()
+        {
+            await Delay(1000);
 
+            long unixTimestamp = Utilities.UnixTimestamp;
+
+            TriggerClientEvent("GGV.Sync.Time", unixTimestamp);
+
+        }
         public List<User> Users { get => users; }
 
         [EventHandler("playerConnecting")]
