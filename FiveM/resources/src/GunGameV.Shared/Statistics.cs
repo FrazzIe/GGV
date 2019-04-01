@@ -27,6 +27,12 @@ namespace GunGameV.Shared
         }
         public int Wins { get; set; }
         public int Loses { get => (gamesPlayed - Wins); }
+        public void Update(GameStats gameStats)
+        {
+            Kills += gameStats.Kills;
+            Deaths += gameStats.Deaths;
+            gamesPlayed++;
+        }
     }
 
     public class GameStats : Statistics
