@@ -35,9 +35,29 @@ namespace GunGameV.Client
                 Tick -= OnPlayerReady;
             }
         }
+        [Tick]
+        private async Task MatchWatcher()
         {
+            await Delay(0);
 
+            if (user != null && currentMatch != null)
             {
+                if (user.InMatch)
+                {
+                    WeaponHash currentWeapon = (WeaponHash) currentMatch.GetWeapon(user.gameStats.Score);
+
+                    if(!Game.PlayerPed.Weapons.HasWeapon(currentWeapon))
+                    {
+                        Game.PlayerPed.Weapons.Give(currentWeapon, 250, true, true);
+                    }
+
+                    if(Game.PlayerPed.Weapons.Current.Hash != WeaponHash.Unarmed && Game.PlayerPed.Weapons.Current.Hash != currentWeapon)
+                    {
+                        Game.PlayerPed.Weapons.Remove(Game.PlayerPed.Weapons.Current);
+                    }
+
+                    //TimeSpan.FromSeconds(currentMatch.EndTime - unixTimestamp).ToString(@"mm\:ss"));
+                }
             }
         }
         [EventHandler("GGV.Sync.Users")]
