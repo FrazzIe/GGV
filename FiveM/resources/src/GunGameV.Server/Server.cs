@@ -131,9 +131,17 @@ namespace GunGameV.Server
                                 player.TriggerEvent("chat:addMessage", messageObject);
                             }
                             break;
+                        case "leave":
+                            if (user.InMatch)
                             {
+                                user.InMatch = false;
+                                user.gameStats = new GameStats();
 
+                                TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users));
+
+                                player.TriggerEvent("GGV.Match.Leave");
                             }
+                            else
                             {
                                 messageObject.args[1] = "You must be in a match to use this command!";
                                 player.TriggerEvent("chat:addMessage", messageObject);
