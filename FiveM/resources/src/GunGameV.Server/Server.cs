@@ -108,13 +108,29 @@ namespace GunGameV.Server
                                 player.TriggerEvent("chat:addMessage", messageObject);
                             }
                             break;
+                        case "join":
+                            if (currentMatch != null)
                             {
+                                if (!user.InMatch)
+                                {
+                                    user.InMatch = true;
 
+                                    TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users));
+
+                                    player.TriggerEvent("GGV.Match.Join");
+                                }
+                                else
                                 {
                                     messageObject.args[1] = "You are already in a match!";
                                     player.TriggerEvent("chat:addMessage", messageObject);
+                                }
+                            }
+                            else
+                            {
                                 messageObject.args[1] = "A match must be started to join one!";
                                 player.TriggerEvent("chat:addMessage", messageObject);
+                            }
+                            break;
                             {
 
                             }
