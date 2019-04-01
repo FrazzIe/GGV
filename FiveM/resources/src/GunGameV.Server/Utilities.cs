@@ -93,7 +93,7 @@ namespace GunGameV.Server
         };
         public static string GetSteam64(string hex)
         {
-            return Convert.ToInt32(hex, 16).ToString();
+            return Convert.ToInt64(hex, 16).ToString();
         }
         public static long UnixTimestamp { get => DateTimeOffset.UtcNow.ToUnixTimeSeconds(); }
         public static List<uint> Weapons { get => weapons; }
