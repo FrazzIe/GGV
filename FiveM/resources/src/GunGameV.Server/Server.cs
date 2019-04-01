@@ -160,31 +160,87 @@ namespace GunGameV.Server
                 player.Drop("Unable to find you in our users list? try rejoining!");
             }
         }
+        private void EndMatch()
+        {
+            List<User> usersInMatch = users.FindAll(user => user.InMatch == true);
 
-                        }
-                        else
-                        {
-                            player.TriggerEvent("chat:addMessage", new
-                            {
-                                color = new[] { 255, 0, 0 },
-                                multiline = true,
-                                args = new[] { "GGV", "You must be in a match to use this command!" },
-                            });
-                        }
-                        break;
-                    default:
-                        player.TriggerEvent("chat:addMessage", new
-                        {
-                            color = new[] { 255, 0, 0 },
-                            multiline = true,
-                            args = new[] { "GGV", "Invalid syntax: start, join or leave are the only accepted arguments!" },
-                        });
-                        break;
-                }
-            } else
+            foreach (User user in usersInMatch)
             {
-                player.Drop("Unable to find you in our users list? try rejoining!");
+                if (currentMatch.Winner == null)
+                {
+                    currentMatch.Winner = user;
+                }
+                else
+                {
+                    if (user.gameStats.Score > currentMatch.Winner.gameStats.Score)
+                    {
+                        currentMatch.Winner = user;
+                    }
+                    else if (user.gameStats.Score == currentMatch.Winner.gameStats.Score)
+                    {
+                        if (user.gameStats.Kills > currentMatch.Winner.gameStats.Kills)
+                        {
+                            currentMatch.Winner = user;
+                        }
+                        else if (user.gameStats.Kills == currentMatch.Winner.gameStats.Kills)
+                        {
+                            if (user.gameStats.Deaths < currentMatch.Winner.gameStats.Deaths)
+                            {
+                                currentMatch.Winner = user;
+                            }
+                        }
+                    }
+                }
+
+                Exports["jssql"].execute("UPDATE player SET kills=?, deaths=?, games_played=games_played + 1 WHERE steam=?", new object[] { user.gameStats.Kills, user.gameStats.Deaths, user.Steam });
+
+                user.globalStats.Update(user.gameStats);
             }
+
+            if (currentMatch.Winner != null)
+            {
+                Exports["jssql"].execute("UPDATE player SET wins=wins+1 WHERE steam=?", new[] { currentMatch.Winner.Steam });
+                TriggerClientEvent("chat:addMessage", new
+                {
+                    color = new[] { 255, 0, 0 },
+                    multiline = true,
+                    args = new[] { "GGV", currentMatch.Winner.Name + " won!" },
+                });
+            }
+
+            currentMatch = null;
+
+            TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users));
+            TriggerClientEvent("GGV.Sync.Match", JsonConvert.SerializeObject(currentMatch));
+        }
+        private void EndMatch(Player player)
+        {
+            List<User> usersInMatch = users.FindAll(user => user.InMatch == true);
+            currentMatch.Winner = users.Find(user => user.ID == player.Handle);
+
+            foreach (User user in usersInMatch)
+            {
+                Exports["jssql"].execute("UPDATE player SET kills=?, deaths=?, games_played=games_played + 1 WHERE steam=?", new object[] { user.gameStats.Kills, user.gameStats.Deaths, user.Steam });
+
+                user.globalStats.Update(user.gameStats);
+            }
+
+            if (currentMatch.Winner != null)
+            {
+                currentMatch.Winner.globalStats.Wins++;
+                Exports["jssql"].execute("UPDATE player SET wins=wins+1 WHERE steam=?", new[] { currentMatch.Winner.Steam });
+                TriggerClientEvent("chat:addMessage", new
+                {
+                    color = new[] { 255, 0, 0 },
+                    multiline = true,
+                    args = new[] { "GGV", currentMatch.Winner.Name + " won!" },
+                });
+            }
+
+            currentMatch = null;
+
+            TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users));
+            TriggerClientEvent("GGV.Sync.Match", JsonConvert.SerializeObject(currentMatch));
         }
     }
 }
