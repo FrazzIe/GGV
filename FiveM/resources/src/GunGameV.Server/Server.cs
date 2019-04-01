@@ -45,7 +45,6 @@ namespace GunGameV.Server
 
             deferrals.done();
         }
-
         [EventHandler("GGV.Setup")]
         private void SetupUser([FromSource]Player player)
         {
@@ -53,7 +52,7 @@ namespace GunGameV.Server
 
             string steam64 = Utilities.GetSteam64(player.Identifiers["steam"]);
 
-            Exports["jssql"].execute("SELECT wins, games_played, kills, deaths FROM player WHERE steam = ?", new[] { "steam64" }, new Action<dynamic>((result) =>
+            Exports["jssql"].execute("SELECT wins, games_played, kills, deaths FROM player WHERE steam = ?", new[] { steam64 }, new Action<dynamic>((result) =>
             {
                 if (result.Count == 0)
                 {
@@ -78,7 +77,6 @@ namespace GunGameV.Server
                 TriggerClientEvent("GGV.Sync.Match", JsonConvert.SerializeObject(currentMatch));
             }
         }
-
         [Command("ggv")]
         private void OnGunGameVCommand(Player player, string[] args) {
             User user = users.Find(x => x.ID == player.Handle);
