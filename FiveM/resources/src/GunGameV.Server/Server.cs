@@ -91,27 +91,14 @@ namespace GunGameV.Server
 
             if (user != null)
             {
-                switch (args[0])
+                if (args.Length > 0)
                 {
-                    case "start":
-                        if(currentMatch == null)
-                        {
 
-                        }
-                        else
-                        {
                             {
-                        }
-                        break;
-                    case "join":
-                        if (currentMatch == null)
-                        {
-                            if (user.InMatch)
                                 messageObject.args[1] = "A match is already in progress!";
                                 player.TriggerEvent("chat:addMessage", messageObject);
                             {
 
-                            } else
                                 {
                                     messageObject.args[1] = "You are already in a match!";
                                     player.TriggerEvent("chat:addMessage", messageObject);
@@ -120,19 +107,26 @@ namespace GunGameV.Server
                             {
 
                             }
-                        }
-                        else
-                        {
                             {
-                        }
-                        break;
-                    case "leave":
-                        if (user.InMatch)
-                        {
                                 messageObject.args[1] = "You must be in a match to use this command!";
                                 player.TriggerEvent("chat:addMessage", messageObject);
+                            }
+                            break;
+                        default:
                             messageObject.args[1] = "Invalid syntax: start, join or leave are the only accepted arguments!";
                             player.TriggerEvent("chat:addMessage", messageObject);
+                            break;
+                    }
+                } else
+                {
+                    messageObject.args[1] = "Invalid syntax: start, join or leave are the only accepted arguments!";
+                    player.TriggerEvent("chat:addMessage", messageObject);
+                }
+            } else
+            {
+                player.Drop("Unable to find you in our users list? try rejoining!");
+            }
+        }
 
                         }
                         else
