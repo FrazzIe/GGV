@@ -82,6 +82,12 @@ namespace GunGameV.Server
         [Command("ggv")]
         private void OnGunGameVCommand(Player player, string[] args) {
             User user = users.Find(x => x.ID == player.Handle);
+            var messageObject = new
+            {
+                color = new[] { 255, 0, 0 },
+                multiline = true,
+                args = new[] { "GGV", "" },
+            };
 
             if (user != null)
             {
@@ -94,44 +100,39 @@ namespace GunGameV.Server
                         }
                         else
                         {
-                            player.TriggerEvent("chat:addMessage", new
                             {
-                                color = new[] { 255, 0, 0 },
-                                multiline = true,
-                                args = new[] { "GGV", "A match is already in progress!" },
-                            });
                         }
                         break;
                     case "join":
                         if (currentMatch == null)
                         {
                             if (user.InMatch)
+                                messageObject.args[1] = "A match is already in progress!";
+                                player.TriggerEvent("chat:addMessage", messageObject);
                             {
 
                             } else
-                                player.TriggerEvent("chat:addMessage", new
                                 {
-                                    color = new[] { 255, 0, 0 },
-                                    multiline = true,
-                                    args = new[] { "GGV", "You are already in a match!" },
-                                });
+                                    messageObject.args[1] = "You are already in a match!";
+                                    player.TriggerEvent("chat:addMessage", messageObject);
+                                messageObject.args[1] = "A match must be started to join one!";
+                                player.TriggerEvent("chat:addMessage", messageObject);
                             {
 
                             }
                         }
                         else
                         {
-                            player.TriggerEvent("chat:addMessage", new
                             {
-                                color = new[] { 255, 0, 0 },
-                                multiline = true,
-                                args = new[] { "GGV", "A match must be started to join one!" },
-                            });
                         }
                         break;
                     case "leave":
                         if (user.InMatch)
                         {
+                                messageObject.args[1] = "You must be in a match to use this command!";
+                                player.TriggerEvent("chat:addMessage", messageObject);
+                            messageObject.args[1] = "Invalid syntax: start, join or leave are the only accepted arguments!";
+                            player.TriggerEvent("chat:addMessage", messageObject);
 
                         }
                         else
