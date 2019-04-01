@@ -12,7 +12,7 @@ namespace GunGameV.Server
         public Match(int _length = 10, int _scoreLimit = 20)
         {
             startTime = Utilities.UnixTimestamp;
-            length = _length * 60 * 1000;
+            length = _length * 60;
             scoreLimit = _scoreLimit;
 
             Random random = new Random();
