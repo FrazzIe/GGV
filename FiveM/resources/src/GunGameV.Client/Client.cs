@@ -13,6 +13,7 @@ namespace GunGameV.Client
     public class Client : BaseScript
     {
         private List<User> users = new List<User>();
+        private User user;
         private Match currentMatch;
 
         public Client()
@@ -33,20 +34,16 @@ namespace GunGameV.Client
                 Tick -= OnPlayerReady;
             }
         }
+        {
+
+            {
+            }
+        }
         [EventHandler("GGV.Sync.Users")]
         private void SyncUsers(string jsonUsers)
         {
-
             users = JsonConvert.DeserializeObject<List<User>>(jsonUsers);
-
-            for (int i = 0; i < users.Count; i++)
-            {
-                Debug.WriteLine("-----------------");
-                Debug.WriteLine("User Index {0}", i);
-                Debug.WriteLine("User: {0}, {1}, {2}, {3}, {4}", users[i].ID, users[i].Name, users[i].Steam, users[i].License, users[i].IP);
-                Debug.WriteLine("Global Stats: {0}, {1}, {2}, {3}", users[i].globalStats.Kills, users[i].globalStats.Deaths, users[i].globalStats.Wins, users[i].globalStats.Loses);
-                Debug.WriteLine("Game Stats: {0}, {1}, {2}", users[i].gameStats.Kills, users[i].gameStats.Deaths, users[i].gameStats.Score);
-            }
+            user = users.Find(x => x.ID == API.GetPlayerServerId(Game.Player.Handle).ToString());
         }
         [EventHandler("GGV.Sync.Match")]
         private void SyncMatch(string jsonMatch)
