@@ -28,6 +28,14 @@ namespace GunGameV.Server
 
             TriggerClientEvent("GGV.Sync.Time", unixTimestamp);
 
+            if (currentMatch != null)
+            {
+                Debug.WriteLine(TimeSpan.FromSeconds(currentMatch.EndTime - unixTimestamp).ToString(@"mm\:ss"));
+                if ((currentMatch.EndTime - unixTimestamp) <= 0 && currentMatch.Winner == null)
+                {
+                    EndMatch();
+                }
+            }
         }
         public List<User> Users { get => users; }
 
