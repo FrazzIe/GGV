@@ -93,10 +93,21 @@ namespace GunGameV.Server
             {
                 if (args.Length > 0)
                 {
+                    switch (args[0])
+                    {
+                        case "start":
+                            if (currentMatch == null)
+                            {
+                                currentMatch = new Match(1, 20);
 
+                                TriggerClientEvent("GGV.Sync.Match", JsonConvert.SerializeObject(currentMatch));
+                            }
+                            else
                             {
                                 messageObject.args[1] = "A match is already in progress!";
                                 player.TriggerEvent("chat:addMessage", messageObject);
+                            }
+                            break;
                             {
 
                                 {
