@@ -18,6 +18,8 @@ namespace GunGameV.Server
 
             Random random = new Random();
 
+            mapName = Utilities.Maps[random.Next(0, Utilities.Maps.Count - 1)];
+
             while (weapons.Count != (scoreLimit - 1))
             {
                 uint weapon = Utilities.Weapons[random.Next(0, Utilities.Weapons.Count - 1)];
