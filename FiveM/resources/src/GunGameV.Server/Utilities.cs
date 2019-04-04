@@ -91,6 +91,12 @@ namespace GunGameV.Server
             2484171525,
             419712736,
         };
+        private static List<string> maps = new List<string>
+        {
+            "bunker",
+            "garage",
+            "iaa",
+        };
         public static string GetSteam64(string hex)
         {
             return Convert.ToInt64(hex, 16).ToString();
@@ -98,5 +104,6 @@ namespace GunGameV.Server
         public static long UnixTimestamp { get => DateTimeOffset.UtcNow.ToUnixTimeSeconds(); }
         public static List<uint> Weapons { get => weapons; }
         public static List<uint> MeleeWeapons { get => meleeWeapons; }
+        public static List<string> Maps { get => maps; }
     }
 }
