@@ -35,7 +35,7 @@ namespace GunGameV.Shared
         }
     }
 
-    public class GameStats : Statistics
+    public class GameStats : Statistics, IComparable
     {
         public GameStats()
         {
@@ -44,5 +44,35 @@ namespace GunGameV.Shared
             Score = 0;
         }
         public int Score { get; set; }
+        public int CompareTo(object obj)
+        {
+            if (obj == null) return 1;
+
+            GameStats otherStats = obj as GameStats;
+
+            if(otherStats != null)
+            {
+                int score = this.Score.CompareTo(otherStats.Score);
+                if (score == 0)
+                {
+                    int kills = this.Kills.CompareTo(otherStats.Kills);
+                    if(kills == 0)
+                    {
+                        int deaths = this.Kills.CompareTo(otherStats.Deaths);
+
+                        return deaths;
+                    } else
+                    {
+                        return kills;
+                    }
+                } else
+                {
+                    return score;
+                }
+            } else
+            {
+                throw new ArgumentException("Object is not a GameStats");
+            }
+        }
     }
 }
