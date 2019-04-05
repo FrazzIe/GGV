@@ -15,6 +15,7 @@ namespace GunGameV.Client
         private List<User> users = new List<User>();
         private User user;
         private Match currentMatch;
+        private Map currentMap;
         private long unixTimestamp = 0;
 
         public Client()
@@ -80,11 +81,15 @@ namespace GunGameV.Client
         private void JoinMatch()
         {
 
+            if (currentMatch != null) {
+                currentMap = new Map(currentMatch.Map);
+            }
         }
         [EventHandler("GGV.Match.Leave")]
         private void LeaveMatch()
         {
 
+            currentMap = null;
         }
     }
 }
