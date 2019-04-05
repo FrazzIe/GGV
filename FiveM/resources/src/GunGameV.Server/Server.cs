@@ -252,6 +252,7 @@ namespace GunGameV.Server
                                 if (!user.InMatch)
                                 {
                                     user.InMatch = true;
+                                    user.gameStats = new GameStats();
 
                                     TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users));
 
