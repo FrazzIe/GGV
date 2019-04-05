@@ -80,9 +80,13 @@ namespace GunGameV.Client
         [EventHandler("GGV.Match.Join")]
         private void JoinMatch()
         {
-
             if (currentMatch != null) {
                 currentMap = new Map(currentMatch.Map);
+                Exports["spawnmanager"].setAutoSpawnCallback(new Action(() =>
+                {
+                    currentMap.Spawn();
+                }));
+                Exports["spawnmanager"].forceRespawn();
             }
         }
         [EventHandler("GGV.Match.Leave")]
