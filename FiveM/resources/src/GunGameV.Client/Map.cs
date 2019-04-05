@@ -87,7 +87,7 @@ namespace GunGameV.Client
                 await BaseScript.Delay(0);
             }
 
-            Vector3 spawnpoint = spawnpoints[API.GetRandomIntInRange(0, spawnpoints.Count + 1)];
+            Vector3 spawnpoint = spawnpoints[API.GetRandomIntInRange(0, spawnpoints.Count)];
 
             FreezePlayer(true);
 
