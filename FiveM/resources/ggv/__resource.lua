@@ -11,3 +11,9 @@ client_scripts {
 server_scripts {
 	"GunGameV.Server.net.dll",
 }
+
+files {
+	"maps/garage.json",
+	"maps/bunker.json",
+	"maps/iaa.json",
+}
