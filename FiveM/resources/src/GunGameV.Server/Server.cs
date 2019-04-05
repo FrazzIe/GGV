@@ -45,23 +45,9 @@ namespace GunGameV.Server
                         }
                         else
                         {
-                            if (user.gameStats.Score > currentMatch.Winner.gameStats.Score)
+                            if(user.gameStats.CompareTo(currentMatch.Winner.gameStats) == 1)
                             {
                                 currentMatch.Winner = user;
-                            }
-                            else if (user.gameStats.Score == currentMatch.Winner.gameStats.Score)
-                            {
-                                if (user.gameStats.Kills > currentMatch.Winner.gameStats.Kills)
-                                {
-                                    currentMatch.Winner = user;
-                                }
-                                else if (user.gameStats.Kills == currentMatch.Winner.gameStats.Kills)
-                                {
-                                    if (user.gameStats.Deaths < currentMatch.Winner.gameStats.Deaths)
-                                    {
-                                        currentMatch.Winner = user;
-                                    }
-                                }
                             }
                         }
 
