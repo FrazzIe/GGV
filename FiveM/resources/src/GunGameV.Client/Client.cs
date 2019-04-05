@@ -92,7 +92,8 @@ namespace GunGameV.Client
         [EventHandler("GGV.Match.Leave")]
         private void LeaveMatch()
         {
-
+            Exports["spawnmanager"].setAutoSpawnCallback(null);
+            Exports["spawnmanager"].forceRespawn();
             currentMap = null;
         }
     }
