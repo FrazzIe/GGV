@@ -137,6 +137,65 @@ namespace GunGameV.Server
                 TriggerClientEvent("GGV.Sync.Match", JsonConvert.SerializeObject(currentMatch));
             }
         }
+        [EventHandler("baseevents:onPlayerKilled")]
+        private void OnPlayerKilled([FromSource] Player victim, int attacker, dynamic deathData)
+        {
+            /*
+             * deathData (ExpandoObject)
+             * killertype (int)
+             * weaponhash (uint)
+             * killerinveh (bool)
+             * killervehseat (int)
+             * killervehname (string)
+             * killerpos (List)
+            */
+            if (currentMatch != null)
+            {
+                if (attacker != -1)
+                {
+                    Player killer = Players[attacker];
+
+                    if (killer != null)
+                    {
+                        User killerData = users.Find(user => user.ID == killer.Handle);
+                        User victimData = users.Find(user => user.ID == victim.Handle);
+
+                        if(killerData != null && victimData != null)
+                        {
+                            if(killerData.InMatch && victimData.InMatch)
+                            {
+                                Debug.WriteLine("{0} Killed {1} with {2}", killerData.Name, victimData.Name, deathData.weaponhash);
+                                if(deathData.weaponhash == 2725352035)
+                                {
+                                    victimData.gameStats.Deaths++;
+                                    victimData.gameStats.Score--;
+                                    killerData.gameStats.Kills++;
+
+                                    TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users));
+                                } else
+                                {
+                                    victimData.gameStats.Deaths++;
+                                    killerData.gameStats.Kills++;
+
+                                    if (currentMatch.Winner == null)
+                                    {
+                                        killerData.gameStats.Score++;
+
+                                        if (killerData.gameStats.Score == currentMatch.ScoreLimit)
+                                        {
+                                        } else
+                                        {
+                                            TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users));
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
         [Command("ggv")]
         private void OnGunGameVCommand(Player player, string[] args) {
             User user = users.Find(x => x.ID == player.Handle);
