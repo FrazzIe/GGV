@@ -49,6 +49,7 @@ namespace GunGameV.Client
 
                     if(!Game.PlayerPed.Weapons.HasWeapon(currentWeapon))
                     {
+                        Game.PlayerPed.Weapons.RemoveAll();
                         Game.PlayerPed.Weapons.Give(currentWeapon, 250, true, true);
                     }
 
