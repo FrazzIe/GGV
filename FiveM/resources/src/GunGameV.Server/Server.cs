@@ -211,6 +211,12 @@ namespace GunGameV.Server
                 }
             }
         }
+        [EventHandler("playerDropped")]
+        private void OnPlayerDropped([FromSource] Player player)
+        {
+            users.RemoveAll(user => user.ID == player.Handle);
+            TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users));
+        }
         [Command("ggv")]
         private void OnGunGameVCommand(Player player, string[] args) {
             User user = users.Find(x => x.ID == player.Handle);
