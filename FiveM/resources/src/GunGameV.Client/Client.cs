@@ -13,6 +13,7 @@ namespace GunGameV.Client
     public class Client : BaseScript
     {
         private List<User> users = new List<User>();
+        private List<User> usersInMatch = new List<User>();
         private User user;
         private Match currentMatch;
         private Map currentMap;
@@ -66,6 +67,7 @@ namespace GunGameV.Client
         private void SyncUsers(string jsonUsers)
         {
             users = JsonConvert.DeserializeObject<List<User>>(jsonUsers);
+            usersInMatch = users.FindAll(user => user.InMatch == true);
             user = users.Find(x => x.ID == API.GetPlayerServerId(Game.Player.Handle).ToString());
         }
         [EventHandler("GGV.Sync.Match")]
