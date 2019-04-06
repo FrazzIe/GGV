@@ -17,11 +17,13 @@ namespace GunGameV.Client
         private User user;
         private Match currentMatch;
         private Map currentMap;
+        private HUD hud;
         private long unixTimestamp = 0;
 
         public Client()
         {
             Debug.WriteLine("GGV CLIENT");
+            hud = new HUD();
         }
 
         public List<User> Users { get => users; }
@@ -40,8 +42,6 @@ namespace GunGameV.Client
         [Tick]
         private async Task MatchWatcher()
         {
-            await Delay(0);
-
             if (user != null && currentMatch != null)
             {
                 if (user.InMatch)
@@ -59,7 +59,8 @@ namespace GunGameV.Client
                         Game.PlayerPed.Weapons.Remove(Game.PlayerPed.Weapons.Current);
                     }
 
-                    //TimeSpan.FromSeconds(currentMatch.EndTime - unixTimestamp).ToString(@"mm\:ss"));
+                    hud.Time = TimeSpan.FromSeconds(currentMatch.EndTime - unixTimestamp).ToString(@"mm\:ss");
+                    hud.Draw();
                 }
             }
         }
@@ -70,6 +71,15 @@ namespace GunGameV.Client
             usersInMatch = users.FindAll(user => user.InMatch == true);
             usersInMatch.Sort((x, y) => y.gameStats.CompareTo(x.gameStats));
             user = users.Find(x => x.ID == API.GetPlayerServerId(Game.Player.Handle).ToString());
+
+            if (user != null)
+            {
+                if (usersInMatch[0].ID != user.ID) hud.Highscore = usersInMatch[0].gameStats.Score;
+                else if (usersInMatch[1] != null) hud.Highscore = usersInMatch[1].gameStats.Score;
+                else hud.Highscore = 0;
+
+                hud.Score = user.gameStats.Score;
+            }
         }
         [EventHandler("GGV.Sync.Match")]
         private void SyncMatch(string jsonMatch)
