@@ -68,6 +68,7 @@ namespace GunGameV.Client
         {
             users = JsonConvert.DeserializeObject<List<User>>(jsonUsers);
             usersInMatch = users.FindAll(user => user.InMatch == true);
+            usersInMatch.Sort((x, y) => y.gameStats.CompareTo(x.gameStats));
             user = users.Find(x => x.ID == API.GetPlayerServerId(Game.Player.Handle).ToString());
         }
         [EventHandler("GGV.Sync.Match")]
