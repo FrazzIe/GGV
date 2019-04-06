@@ -100,6 +100,7 @@ namespace GunGameV.Client
 
             API.ClearPedTasksImmediately(ped);
             API.RemoveAllPedWeapons(ped, true);
+            API.ClearPedBloodDamage(ped);
 
             while (!API.HasCollisionLoadedAroundEntity(ped))
             {
