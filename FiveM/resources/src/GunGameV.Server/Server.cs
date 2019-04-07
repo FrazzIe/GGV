@@ -236,9 +236,17 @@ namespace GunGameV.Server
                         case "start":
                             if (currentMatch == null)
                             {
-                                currentMatch = new Match(1, 20);
+                                currentMatch = new Match(10, 20);
+
+                                user.InMatch = true;
+                                user.gameStats = new GameStats();
 
                                 TriggerClientEvent("GGV.Sync.Match", JsonConvert.SerializeObject(currentMatch));
+
+                                messageObject.args[1] = "^*" + player.Name + "^0 started a match! type ^1/ggv join ^0 to join";
+                                TriggerClientEvent("chat:addMessage", messageObject);
+
+                                player.TriggerEvent("GGV.Match.Join");
                             }
                             else
                             {
