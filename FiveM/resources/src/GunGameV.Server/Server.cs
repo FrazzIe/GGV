@@ -48,7 +48,7 @@ namespace GunGameV.Server
                             }
                         }
 
-                        Exports["jssql"].execute("UPDATE player SET kills=?, deaths=?, games_played=games_played + 1 WHERE steam=?", new object[] { user.gameStats.Kills, user.gameStats.Deaths, user.Steam });
+                        Exports["jssql"].execute("UPDATE player SET kills=kills + ?, deaths=deaths + ?, games_played=games_played + 1 WHERE steam=?", new object[] { user.gameStats.Kills, user.gameStats.Deaths, user.Steam });
                         user.InMatch = false;
                         user.globalStats.Update(user.gameStats);
                     }
@@ -176,7 +176,7 @@ namespace GunGameV.Server
 
                                             foreach (User user in usersInMatch)
                                             {
-                                                Exports["jssql"].execute("UPDATE player SET kills=?, deaths=?, games_played=games_played + 1 WHERE steam=?", new object[] { user.gameStats.Kills, user.gameStats.Deaths, user.Steam });
+                                                Exports["jssql"].execute("UPDATE player SET kills=kills + ?, deaths=deaths + ?, games_played=games_played + 1 WHERE steam=?", new object[] { user.gameStats.Kills, user.gameStats.Deaths, user.Steam });
                                                 user.InMatch = false;
                                                 user.globalStats.Update(user.gameStats);
                                             }
