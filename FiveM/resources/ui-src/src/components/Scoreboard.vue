@@ -96,6 +96,21 @@
       Show(payload) {
         this.visible = payload == "true";
       },
+      Left(payload) {
+        var nextPage = this.pagination.page - 1;
+        if(nextPage < 1) {
+          this.pagination.page = this.pages;
+        } else {
+          this.pagination.page = nextPage;
+        }        
+      },
+      Right(payload) {
+        var nextPage = this.pagination.page + 1;
+        if(nextPage > this.pages) {
+          this.pagination.page = 1;
+        } else {
+          this.pagination.page = nextPage;
+        }
       }
     },
     mounted() {
