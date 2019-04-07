@@ -238,10 +238,14 @@ namespace GunGameV.Server
                                 user.InMatch = true;
                                 user.gameStats = new GameStats();
 
+                                TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users));
                                 TriggerClientEvent("GGV.Sync.Match", JsonConvert.SerializeObject(currentMatch));
 
-                                messageObject.args[1] = "^*^3" + player.Name + "^r^0 started a match! type ^*^1/ggv join ^r^0 to join";
+                                messageObject.args[1] = "^*^3" + player.Name + "^r^0 started a match! type ^*^1/ggv join ^r^0 to participate!";
                                 TriggerClientEvent("chat:addMessage", messageObject);
+
+                                messageObject.args[1] = "Use ^*^1Z ^r^0to view the scoreboard while playing!";
+                                player.TriggerEvent("chat:addMessage", messageObject);
 
                                 player.TriggerEvent("GGV.Match.Join");
                             }
@@ -263,7 +267,7 @@ namespace GunGameV.Server
 
                                     player.TriggerEvent("GGV.Match.Join");
 
-                                    messageObject.args[1] = "Use ^1Z ^0to view the scoreboard while playing!";
+                                    messageObject.args[1] = "Use ^*^1Z ^r^0to view the scoreboard while playing!";
                                     player.TriggerEvent("chat:addMessage", messageObject);
                                 }
                                 else
@@ -295,13 +299,13 @@ namespace GunGameV.Server
                             }
                             break;
                         default:
-                            messageObject.args[1] = "Invalid syntax: start, join or leave are the only accepted arguments!";
+                            messageObject.args[1] = "Invalid syntax: ^*^1start^r^0, ^*^1join ^r^0or ^*^1leave ^r^0are the only accepted arguments!";
                             player.TriggerEvent("chat:addMessage", messageObject);
                             break;
                     }
                 } else
                 {
-                    messageObject.args[1] = "Invalid syntax: start, join or leave are the only accepted arguments!";
+                    messageObject.args[1] = "Invalid syntax: ^*^1start^r^0, ^*^1join ^r^0or ^*^1leave ^r^0are the only accepted arguments!";
                     player.TriggerEvent("chat:addMessage", messageObject);
                 }
             } else
