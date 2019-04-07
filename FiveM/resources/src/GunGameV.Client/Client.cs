@@ -73,6 +73,39 @@ namespace GunGameV.Client
                 }
             }
         }
+        [Tick]
+        private async Task ScoreboardWatcher()
+        {
+            if (user != null && currentMatch != null)
+            {
+                if (user.InMatch)
+                {
+                    if (API.IsControlPressed(1, 20))
+                    {
+                        SendNuiMessage("Show", "true");
+
+                        while (API.IsControlPressed(1, 20) && currentMatch != null && user.InMatch)
+                        {
+                            await Delay(0);
+
+                            if(API.IsControlJustPressed(0, 174))
+                            {
+                                Debug.WriteLine("Left");
+                                SendNuiMessage("Left", "left");
+                            }
+
+                            if (API.IsControlJustPressed(0, 175))
+                            {
+                                Debug.WriteLine("Right");
+                                SendNuiMessage("Right", "right");
+                            }
+                        }
+
+                        SendNuiMessage("Show", "false");
+                    }
+                }
+            }
+        }
         [EventHandler("GGV.Sync.Users")]
         private void SyncUsers(string jsonUsers)
         {
