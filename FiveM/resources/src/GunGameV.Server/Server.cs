@@ -298,14 +298,26 @@ namespace GunGameV.Server
                                 player.TriggerEvent("chat:addMessage", messageObject);
                             }
                             break;
+                        case "stats":
+                            messageObject.args[1] = "User: ^*^3" + user.Name;
+                            player.TriggerEvent("chat:addMessage", messageObject);
+                            messageObject.args[1] = "Kills: ^*^3" + user.globalStats.Kills;
+                            player.TriggerEvent("chat:addMessage", messageObject);
+                            messageObject.args[1] = "Deaths: ^*^3" + user.globalStats.Deaths;
+                            player.TriggerEvent("chat:addMessage", messageObject);
+                            messageObject.args[1] = "Wins: ^*^3" + user.globalStats.Wins;
+                            player.TriggerEvent("chat:addMessage", messageObject);
+                            messageObject.args[1] = "Loses: ^*^3" + user.globalStats.Loses;
+                            player.TriggerEvent("chat:addMessage", messageObject);
+                            break;
                         default:
-                            messageObject.args[1] = "Invalid syntax: ^*^1start^r^0, ^*^1join ^r^0or ^*^1leave ^r^0are the only accepted arguments!";
+                            messageObject.args[1] = "Invalid syntax: ^*^1start^r^0, ^*^1join ^*^1leave ^r^0or ^*^1stats ^r^0are the only accepted arguments!";
                             player.TriggerEvent("chat:addMessage", messageObject);
                             break;
                     }
                 } else
                 {
-                    messageObject.args[1] = "Invalid syntax: ^*^1start^r^0, ^*^1join ^r^0or ^*^1leave ^r^0are the only accepted arguments!";
+                    messageObject.args[1] = "Invalid syntax: ^*^1start^r^0, ^*^1join ^*^1leave ^r^0or ^*^1stats ^r^0are the only accepted arguments!";
                     player.TriggerEvent("chat:addMessage", messageObject);
                 }
             } else
