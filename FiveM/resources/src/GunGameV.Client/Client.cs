@@ -51,25 +51,37 @@ namespace GunGameV.Client
         [Tick]
         private async Task MatchWatcher()
         {
-            if (user != null && currentMatch != null)
+            if (user != null)
             {
-                if (user.InMatch)
+                if (currentMatch != null)
                 {
-                    WeaponHash currentWeapon = (WeaponHash) currentMatch.GetWeapon(user.gameStats.Score);
-
-                    if(!Game.PlayerPed.Weapons.HasWeapon(currentWeapon))
+                    if (user.InMatch)
                     {
-                        Game.PlayerPed.Weapons.RemoveAll();
-                        Game.PlayerPed.Weapons.Give(currentWeapon, 250, true, true);
-                    }
+                        WeaponHash currentWeapon = (WeaponHash)currentMatch.GetWeapon(user.gameStats.Score);
 
-                    if(Game.PlayerPed.Weapons.Current.Hash != WeaponHash.Unarmed && Game.PlayerPed.Weapons.Current.Hash != currentWeapon)
+                        if (!Game.PlayerPed.Weapons.HasWeapon(currentWeapon))
+                        {
+                            Game.PlayerPed.Weapons.RemoveAll();
+                            Game.PlayerPed.Weapons.Give(currentWeapon, 250, true, true);
+                        }
+
+                        if (Game.PlayerPed.Weapons.Current.Hash != WeaponHash.Unarmed && Game.PlayerPed.Weapons.Current.Hash != currentWeapon)
+                        {
+                            Game.PlayerPed.Weapons.Remove(Game.PlayerPed.Weapons.Current);
+                        }
+
+                        hud.Time = TimeSpan.FromSeconds(currentMatch.EndTime - unixTimestamp).ToString(@"mm\:ss");
+                        hud.Draw();
+                    }
+                }
+
+                for (int i = 0; i < 255; i++)
+                {
+                    if (API.NetworkIsPlayerActive(i))
                     {
-                        Game.PlayerPed.Weapons.Remove(Game.PlayerPed.Weapons.Current);
+                        API.SetCanAttackFriendly(API.GetPlayerPed(i), user.InMatch, user.InMatch);
+                        API.NetworkSetFriendlyFireOption(user.InMatch);
                     }
-
-                    hud.Time = TimeSpan.FromSeconds(currentMatch.EndTime - unixTimestamp).ToString(@"mm\:ss");
-                    hud.Draw();
                 }
             }
         }
