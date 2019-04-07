@@ -81,13 +81,33 @@ namespace GunGameV.Client
             usersInMatch.Sort((x, y) => y.gameStats.CompareTo(x.gameStats));
             user = users.Find(x => x.ID == API.GetPlayerServerId(Game.Player.Handle).ToString());
 
-            if (user != null)
-            {
-                if (usersInMatch[0].ID != user.ID) hud.Highscore = usersInMatch[0].gameStats.Score;
-                else if (usersInMatch[1] != null) hud.Highscore = usersInMatch[1].gameStats.Score;
-                else hud.Highscore = 0;
 
-                hud.Score = user.gameStats.Score;
+            if (user != null && currentMatch != null)
+            {
+                if (user.InMatch)
+                {
+
+                    if(usersInMatch.Count >= 1)
+                    {
+                        if (usersInMatch[0].ID != user.ID)
+                        {
+                            hud.Highscore = usersInMatch[0].gameStats.Score;
+                        }
+                        else if (usersInMatch.Count > 1)
+                        {
+                            hud.Highscore = usersInMatch[1].gameStats.Score;
+                        }
+                        else
+                        {
+                            hud.Highscore = 0;
+                        }
+                    } else
+                    {
+                        hud.Highscore = 0;
+                    }
+
+                    hud.Score = user.gameStats.Score;
+                }
             }
         }
         [EventHandler("GGV.Sync.Match")]
