@@ -1,5 +1,36 @@
 <template>
   <v-container fill-height v-if="visible">
+    <v-layout
+      text-xs-center
+      align-center
+      justify-center
+    >
+      <v-flex xs12>
+        <v-layout>
+          <v-flex xs6>
+            <h1 class="text-xs-left" style="color: rgb(255, 255, 255);">Leaderboard</h1>
+          </v-flex>
+          <v-flex xs6>
+            <h1 class="text-xs-right" style="color: rgb(255, 255, 255);">Gun Game V</h1>
+          </v-flex>
+        </v-layout>
+        <v-data-table
+          :headers="headers"
+          :items="players"
+          :rows-per-page-items="[10]"
+          class="elevation-1"
+          dark
+        >
+          <template v-slot:items="props">
+            <td>{{ props.item.ID }}</td>
+            <td>{{ props.item.Name }}</td>
+            <td>{{ props.item.gameStats.Score }}</td>
+            <td>{{ props.item.gameStats.Kills }}</td>
+            <td>{{ props.item.gameStats.Deaths }}</td>
+          </template>
+        </v-data-table>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -7,6 +38,40 @@
   export default {
     data () {
       return {
+        visible: false,
+        headers: [
+          {
+            text: "ID",
+            value: "ID",
+            sortable: false,
+            align: "center",
+          },
+          {
+            text: "Name",
+            value: "Name",
+            sortable: false,
+            align: "center",
+          },
+          {
+            text: "Score",
+            value: "gameStats.Score",
+            sortable: false,
+            align: "center",
+          },
+          {
+            text: "Kills",
+            value: "gameStats.Kills",
+            sortable: false,
+            align: "center",
+          },
+          {
+            text: "Deaths",
+            value: "gameStats.Deaths",
+            sortable: false,
+            align: "center",
+          },
+        ],
+        players: [],
       }
     },
   }
