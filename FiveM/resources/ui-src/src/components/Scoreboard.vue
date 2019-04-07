@@ -18,6 +18,7 @@
           :headers="headers"
           :items="players"
           :rows-per-page-items="[10]"
+          :pagination.sync="pagination"
           class="elevation-1"
           dark
         >
@@ -72,6 +73,13 @@
           },
         ],
         players: [],
+        pagination: {
+          descending: true,
+          sortBy: "gameStats.Score",
+          rowsPerPage: 10
+        }
+      }
+    },
     methods: {
       SetPlayers(payload) {
         this.players = payload;
