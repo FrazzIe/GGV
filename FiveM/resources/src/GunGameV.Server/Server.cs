@@ -119,6 +119,13 @@ namespace GunGameV.Server
             {
                 TriggerClientEvent("GGV.Sync.Match", JsonConvert.SerializeObject(currentMatch));
             }
+
+            player.TriggerEvent("chat:addMessage", new
+            {
+                color = new[] { 255, 0, 0 },
+                multiline = true,
+                args = new[] { "GGV", string.Format("^*^3{0} ^r^0use ^*^1/ggv ^r^0to get started!", player.Name) },
+            });
         }
         [EventHandler("baseevents:onPlayerKilled")]
         private void OnPlayerKilled([FromSource] Player victim, int attacker, dynamic deathData)
@@ -138,7 +145,14 @@ namespace GunGameV.Server
                         {
                             if(killerData.InMatch && victimData.InMatch)
                             {
-                                if(deathData.weaponhash == 2725352035)
+                                TriggerClientEvent("chat:addMessage", new
+                                {
+                                    color = new[] { 255, 0, 0 },
+                                    multiline = true,
+                                    args = new[] { "GGV", string.Format("^*^8{0} ^r^0killed ^*^5{1}", killer.Name, victim.Name) },
+                                });
+
+                                if (deathData.weaponhash == 2725352035)
                                 {
                                     victimData.gameStats.Deaths++;
                                     victimData.gameStats.Score--;
@@ -173,7 +187,7 @@ namespace GunGameV.Server
                                             {
                                                 color = new[] { 255, 0, 0 },
                                                 multiline = true,
-                                                args = new[] { "GGV", currentMatch.Winner.Name + " won!" },
+                                                args = new[] { "GGV", currentMatch.Winner.Name + " won the game!" },
                                             });
 
                                             currentMatch = null;
@@ -226,7 +240,7 @@ namespace GunGameV.Server
 
                                 TriggerClientEvent("GGV.Sync.Match", JsonConvert.SerializeObject(currentMatch));
 
-                                messageObject.args[1] = "^*" + player.Name + "^0 started a match! type ^1/ggv join ^0 to join";
+                                messageObject.args[1] = "^*^3" + player.Name + "^r^0 started a match! type ^*^1/ggv join ^r^0 to join";
                                 TriggerClientEvent("chat:addMessage", messageObject);
 
                                 player.TriggerEvent("GGV.Match.Join");
@@ -248,6 +262,9 @@ namespace GunGameV.Server
                                     TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users));
 
                                     player.TriggerEvent("GGV.Match.Join");
+
+                                    messageObject.args[1] = "Use ^1Z ^0to view the scoreboard while playing!";
+                                    player.TriggerEvent("chat:addMessage", messageObject);
                                 }
                                 else
                                 {
