@@ -90,13 +90,11 @@ namespace GunGameV.Client
 
                             if(API.IsControlJustPressed(0, 174))
                             {
-                                Debug.WriteLine("Left");
                                 SendNuiMessage("Left", "left");
                             }
 
                             if (API.IsControlJustPressed(0, 175))
                             {
-                                Debug.WriteLine("Right");
                                 SendNuiMessage("Right", "right");
                             }
                         }
@@ -120,7 +118,6 @@ namespace GunGameV.Client
             {
                 if (user.InMatch)
                 {
-
                     if(usersInMatch.Count >= 1)
                     {
                         if (usersInMatch[0].ID != user.ID)

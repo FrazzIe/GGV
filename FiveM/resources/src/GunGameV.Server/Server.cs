@@ -30,12 +30,9 @@ namespace GunGameV.Server
 
             if (currentMatch != null)
             {
-                Debug.WriteLine(TimeSpan.FromSeconds(currentMatch.EndTime - unixTimestamp).ToString(@"mm\:ss"));
-
                 if ((currentMatch.EndTime - unixTimestamp) <= 0 && currentMatch.Winner == null)
                 {
                     List<User> usersInMatch = users.FindAll(user => user.InMatch == true);
-
 
                     foreach (User user in usersInMatch)
                     {
@@ -126,15 +123,6 @@ namespace GunGameV.Server
         [EventHandler("baseevents:onPlayerKilled")]
         private void OnPlayerKilled([FromSource] Player victim, int attacker, dynamic deathData)
         {
-            /*
-             * deathData (ExpandoObject)
-             * killertype (int)
-             * weaponhash (uint)
-             * killerinveh (bool)
-             * killervehseat (int)
-             * killervehname (string)
-             * killerpos (List)
-            */
             if (currentMatch != null)
             {
                 if (attacker != -1)
@@ -150,7 +138,6 @@ namespace GunGameV.Server
                         {
                             if(killerData.InMatch && victimData.InMatch)
                             {
-                                Debug.WriteLine("{0} Killed {1} with {2}", killerData.Name, victimData.Name, deathData.weaponhash);
                                 if(deathData.weaponhash == 2725352035)
                                 {
                                     victimData.gameStats.Deaths++;
@@ -173,15 +160,11 @@ namespace GunGameV.Server
 
                                             List<User> usersInMatch = users.FindAll(user => user.InMatch == true);
 
-                                            Debug.WriteLine("Name // S // K // D");
-
                                             foreach (User user in usersInMatch)
                                             {
                                                 Exports["jssql"].execute("UPDATE player SET kills=?, deaths=?, games_played=games_played + 1 WHERE steam=?", new object[] { user.gameStats.Kills, user.gameStats.Deaths, user.Steam });
                                                 user.InMatch = false;
                                                 user.globalStats.Update(user.gameStats);
-
-                                                Debug.WriteLine("{0} // {1} // {2} // {3}", user.Name, user.gameStats.Score, user.gameStats.Kills, user.gameStats.Deaths);
                                             }
 
                                             currentMatch.Winner.globalStats.Wins++;
