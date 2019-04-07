@@ -74,6 +74,12 @@
         players: [],
       }
     },
+    mounted() {
+      this.listener = window.addEventListener('message', (event) => {
+        const item = event.data || event.detail;
+        if (this[item.type] && item.payload) this[item.type](item.payload);
+      });
+    }
   }
 </script>
 
