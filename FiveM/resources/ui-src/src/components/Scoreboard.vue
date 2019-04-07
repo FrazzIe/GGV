@@ -72,6 +72,13 @@
           },
         ],
         players: [],
+    methods: {
+      SetPlayers(payload) {
+        this.players = payload;
+      },
+      Show(payload) {
+        this.visible = payload == "true";
+      },
       }
     },
     mounted() {
