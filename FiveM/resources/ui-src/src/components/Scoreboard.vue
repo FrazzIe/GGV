@@ -5,7 +5,7 @@
       align-center
       justify-center
     >
-      <v-flex xs12>
+      <v-flex xs8>
         <v-layout>
           <v-flex xs6>
             <h1 class="text-xs-left" style="color: rgb(255, 255, 255);">Leaderboard</h1>
