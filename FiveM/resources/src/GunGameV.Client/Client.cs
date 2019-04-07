@@ -81,6 +81,7 @@ namespace GunGameV.Client
             usersInMatch.Sort((x, y) => y.gameStats.CompareTo(x.gameStats));
             user = users.Find(x => x.ID == API.GetPlayerServerId(Game.Player.Handle).ToString());
 
+            SendNuiMessage("SetPlayers", usersInMatch);
 
             if (user != null && currentMatch != null)
             {
