@@ -12,8 +12,13 @@ server_scripts {
 	"GunGameV.Server.net.dll",
 }
 
+ui_page "ui/index.html"
+
 files {
 	"maps/garage.json",
 	"maps/bunker.json",
 	"maps/iaa.json",
+	"ui/index.html",
+	"ui/js/app.js",
+	"ui/css/app.css",
 }
