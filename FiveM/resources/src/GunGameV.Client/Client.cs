@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Dynamic;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
 using Newtonsoft.Json;
@@ -28,6 +29,14 @@ namespace GunGameV.Client
 
         public List<User> Users { get => users; }
 
+        private void SendNuiMessage(string type, object payload)
+        {
+            dynamic message = new ExpandoObject();
+            message.type = type;
+            message.payload = payload;
+
+            API.SendNuiMessage(JsonConvert.SerializeObject(message));
+        }
         [Tick]
         private async Task OnPlayerReady()
         {
