@@ -126,7 +126,7 @@ namespace GunGameV.Client
 
             SendNuiMessage("SetPlayers", usersInMatch);
 
-            if (user != null && currentMatch != null)
+            if (user != null)
             {
                 if (user.InMatch)
                 {
