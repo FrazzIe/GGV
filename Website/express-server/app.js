@@ -5,6 +5,7 @@ const passportSetup = require('./config/passport-setup');
 const passport = require('passport');
 
 const keys = require('./config/keys');
+const sql = require('./config/sql');
 
 const publicRoot = '../vue-client/dist';
 
@@ -14,8 +15,8 @@ app.use(express.static(publicRoot))
 app.use(bodyParser.json())
 
 app.use(cookieSession({  
-    keys: keys.session.cookieKeys,
-    maxAge: 24 * 60 * 60 * 1000
+  keys: keys.session.cookieKeys,
+  maxAge: 24 * 60 * 60 * 1000
 }))
 
 app.use(passport.initialize());
@@ -63,11 +64,23 @@ app.get("/logout", function(req, res) {
 });
 
 app.get("/api/user", function(req, res) {
-    if(req.isAuthenticated()) {
-      res.send({user: req.session.passport.user});
-    } else {
-      res.send({user: false});
-    }
+  if(req.isAuthenticated()) {
+    res.send({user: req.session.passport.user});
+  } else {
+    res.send({user: false});
+  }
+});
+
+app.get("/api/stats", function(req, res) {
+  sql.execute(sql.topKills, []).then((kills) => {
+    sql.execute(sql.topDeaths, []).then((deaths) => {
+      sql.execute(sql.topWins, []).then((wins) => {
+        sql.execute(sql.topLosses, []).then((losses) => {
+          res.send({statistics: { kills: kills, deaths: deaths, wins: wins, losses: losses}});
+        })
+      })
+    })
+  })
 });
 
 app.listen(3000, () => {  
