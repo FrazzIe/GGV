@@ -214,6 +214,130 @@ namespace GunGameV.Server
             users.RemoveAll(user => user.ID == player.Handle);
             TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users));
         }
+        [EventHandler("rconCommand")]
+        private void OnRconCommand(string commandName, dynamic args)
+        {
+            switch (commandName.ToLower())
+            {
+                case "ban":
+                    if (args.Count >= 4)
+                    {
+                        int id;
+                        int amount;
+
+                        if (int.TryParse(args[0], out id))
+                        {
+                            if (int.TryParse(args[1], out amount))
+                            {
+                                long expire;
+
+                                switch(args[2])
+                                {
+                                    case "h":
+                                        expire = Utilities.UnixTimestamp + (amount * 60 * 60);
+                                        break;
+                                    case "m":
+                                        expire = Utilities.UnixTimestamp + (amount * 60);
+                                        break;
+                                    case "s":
+                                        expire = Utilities.UnixTimestamp + amount;
+                                        break;
+                                    default:
+                                        expire = 0;
+                                        break;
+                                }
+
+                                if (expire != 0)
+                                {
+                                    Player player = Players[id];
+
+                                    if (player.EndPoint != null)
+                                    {
+                                        User user = users.Find(x => x.ID == player.Handle);
+
+                                        if (user != null)
+                                        {
+                                            Exports["jssql"].execute("INSERT INTO ban (`player_id`, `reason`, `expire`) VALUES ((SELECT id FROM player WHERE steam = ?),?, FROM_UNIXTIME(?))", new object[] { user.Steam, args[3], expire });
+
+                                            string banTime = DateTimeOffset.FromUnixTimeSeconds(expire).ToString(@"dd/MM/yyyy HH\:mm\:ss UTC");
+                                            
+                                            Debug.WriteLine("[GGV] ^3{0} ^0has been banned until ^3{1} ^0for ^3{2}^0", player.Name, banTime, args[3]);
+
+                                            player.Drop(string.Format("You have been banned from the server until {0} for {1}", banTime, args[3]));                                            
+                                        }
+                                        else
+                                        {
+                                            player.Drop("Unable to find you in our users list? try rejoining!");
+                                            Debug.WriteLine("[GGV] ^3{0} ^0was not found in the users list!", player.Name);
+                                            API.CancelEvent();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Debug.WriteLine("[GGV] ^1Unable to find player ^3{0}^0", id);
+                                        API.CancelEvent();
+                                    }
+                                } else
+                                {
+                                    Debug.WriteLine("[GGV] ^1(h)ours, (m)inutes and (s)econds are the only accepted arguments!^0");
+                                    API.CancelEvent();
+                                }
+                            } else
+                            {
+                                Debug.WriteLine("[GGV] ^1Unable to parse ^3\"{1}\"^1 as an Integer^0", args[1]);
+                                API.CancelEvent();
+                            }
+                        }
+                        else
+                        {
+                            Debug.WriteLine("[GGV] ^1Unable to parse ^3\"{1}\"^1 as an Integer^0", args[0]);
+                            API.CancelEvent();
+                        }
+                    } else
+                    {
+                        Debug.WriteLine("[GGV] ban [id] [time] [h | m | s] [reason]");
+                        API.CancelEvent();
+                    }
+                    break;
+                case "kick":
+                    if (args.Count >= 2)
+                    {
+                        int id;
+
+                        if (int.TryParse(args[0], out id))
+                        {
+                            Player player = Players[id];
+
+                            if (player.EndPoint != null)
+                            {
+                                Debug.WriteLine("[GGV] ^3{0} ^0has been kicked for ^3{1}^0", player.Name, args[1]);
+                                player.Drop(args[1]);         
+                                API.CancelEvent();
+                            }
+                            else
+                            {
+                                Debug.WriteLine("[GGV] ^1Unable to find player ^3{0}^0", id);
+                                API.CancelEvent();
+                            }
+                        }
+                        else
+                        {
+                            Debug.WriteLine("[GGV] ^1Unable to parse ^3\"{1}\"^1 as an Integer^0", args[0]);
+                            API.CancelEvent();
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("[GGV] kick [id] [reason]");
+                        API.CancelEvent();
+                    }
+                    break;
+                default:
+                    Debug.WriteLine("[GGV] No such command found!");
+                    API.CancelEvent();
+                    break;
+            }
+        }
         [Command("ggv")]
         private void OnGunGameVCommand(Player player, string[] args) {
             User user = users.Find(x => x.ID == player.Handle);
