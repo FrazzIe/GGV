@@ -1,6 +1,7 @@
 <template>
   <v-container fill-height grid-list-md v-if="user">
-    <v-layout text-xs-center align-center justify-center>
+    <v-layout text-xs-center align-center justify-center wrap>
+      <v-flex xs12><span class="display-2">My Stats</span></v-flex>
       <v-flex xs3>
         <v-layout column>
           <v-flex xs>
