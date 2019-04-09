@@ -3,6 +3,7 @@ const cookieSession = require('cookie-session');
 const bodyParser = require('body-parser');
 const passportSetup = require('./config/passport-setup');
 const passport = require('passport');
+const axios = require('axios');
 
 const keys = require('./config/keys');
 const sql = require('./config/sql');
@@ -96,6 +97,37 @@ app.get("/api/stats", function(req, res) {
   })
 });
 
+app.get("/api/search/:value", function(req, res) {
+  let value = req.params.value;
+
+  if (value !== "undefined") {
+    value = encodeURI(value).replace("%20", " ");
+    value = "%" + value + "%";
+
+    sql.execute(sql.findUser, [value, value]).then((results) => {
+      let size = Object.keys(results).length;
+      
+      if(size > 0) {
+        let steamids = "";
+        for(var i = 0; i < size; i++) {
+          steamids += "," + results[i].steamid;
+        }
+
+        steamids = steamids.substring(1);
+
+        axios.get("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + keys.steam.apiKey + "&steamids=" + steamids).then((resp) => {
+          res.send({ results: resp.data.response.players});
+        }).catch((err) => {
+          res.send({results: results});
+        })
+      } else {
+        res.send({results: results});
+      }
+    });
+  } else {
+    res.send({ results: {}});
+  }
+})
 app.listen(3000, () => {  
   console.log("ggv app listening on port 3000")
 })
