@@ -71,6 +71,19 @@ app.get("/api/user", function(req, res) {
   }
 });
 
+app.get("/api/user/:steamid", function(req, res) {
+  let steamid = req.params.steamid;
+
+  sql.execute(sql.getUser, [steamid]).then((result) => {
+    if (typeof result[0] === "undefined") {
+      res.send({user: false});
+    } else {
+      result[0].steamid = steamid;
+      res.send({user: result[0]});
+    }
+  });
+});
+
 app.get("/api/stats", function(req, res) {
   sql.execute(sql.topKills, []).then((kills) => {
     sql.execute(sql.topDeaths, []).then((deaths) => {
