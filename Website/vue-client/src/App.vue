@@ -113,6 +113,43 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      <v-dialog v-model="searchResultsDlg" persistent max-width="500px">
+        <v-card>
+          <v-toolbar color="primary" dark>
+            <v-toolbar-title>Search results</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <v-list>
+              <v-list-tile v-for="(usr, index) in searchResults" :key="usr.id">
+                <v-list-tile-avatar>
+                  <img :src="usr.avatarfull">
+                </v-list-tile-avatar>
+
+                <v-list-tile-content>
+                  <v-list-tile-title>
+                    {{ usr.personaname }}
+                  </v-list-tile-title>
+                  <v-list-tile-sub-title>
+                    <a :href="'http://steamcommunity.com/profiles/' + usr.steamid">Steam profile</a>
+                  </v-list-tile-sub-title>
+                </v-list-tile-content>
+
+                <v-list-tile-action>
+                  <v-btn flat icon color="primary" @click="getPlayer(usr.steamid)">
+                    <v-icon>more_horiz</v-icon>
+                  </v-btn>
+                </v-list-tile-action>
+              </v-list-tile>
+            </v-list>
+            <span class="body-1 text-xs-center" v-if="Object.keys(searchResults).length == 0">No results found</span>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary darken-1" flat @click="searchResultsDlg = false">Exit</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-content>
   </v-app>
 </template>
@@ -164,6 +201,7 @@ export default {
           self.searchResults = resp.data.results;
           self.searchLoad = false;
           self.searchDlg = false;
+          self.searchResultsDlg = true;
         }).catch((err) => {
           console.log(err);
           self.$router.push("/");      
