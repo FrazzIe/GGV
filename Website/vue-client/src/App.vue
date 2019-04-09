@@ -27,6 +27,10 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
+      <v-btn icon @click="searchDlg = !searchDlg">
+        <v-icon>search</v-icon>
+      </v-btn>
+
       <a href="/login" v-if="!user">
         <img src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png">
       </a>
@@ -87,6 +91,28 @@
 
     <v-content>
       <router-view/>
+
+      <v-dialog v-model="searchDlg" persistent max-width="500px">
+        <v-card>
+          <v-toolbar color="primary" dark>
+            <v-toolbar-title>Search for player</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <v-text-field v-model="searchField" prepend-icon="search" label="Player name or Steam64" :rules="searchRules" counter @change="findPlayer"></v-text-field>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary darken-1" flat @click="findPlayer" :loading="searchLoad">Search</v-btn>
+            <v-btn color="primary darken-1" flat @click="searchDlg = false">Exit</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-content>
   </v-app>
 </template>
@@ -103,7 +129,13 @@ export default {
   data () {
     return {
       drawer: true,
-      menu: false
+      menu: false,
+      searchDlg: false,
+      searchField: "",
+      searchRules: {
+        counter: value => value.length > 3 || 'Too short',
+      },
+      searchResults: []
     }
   },
   computed: {
@@ -117,13 +149,26 @@ export default {
     getUser() {
       let self = this
       axios.get("/api/user").then((resp) => {
-        if(resp.data.user) {
+        if(resp.data.user !== "undefined") {
           self.setUser(resp.data.user);
         }
       }).catch((err) => {
         console.log(err);
         self.$router.push("/");
       });
+    },
+    findPlayer() {
+      if(this.searchField.length > 3) {
+        let self = this
+        axios.get("/api/search/" + this.searchField).then((resp) => {
+          self.searchResults = resp.data.results;
+          self.searchLoad = false;
+          self.searchDlg = false;
+        }).catch((err) => {
+          console.log(err);
+          self.$router.push("/");      
+        });
+      }
     },
   },
   mounted(){
