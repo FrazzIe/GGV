@@ -75,7 +75,7 @@ namespace GunGameV.Server
         public List<User> Users { get => users; }
 
         [EventHandler("playerConnecting")]
-        private void OnPlayerConnecting([FromSource]Player player, string name, dynamic setKickReason, dynamic deferrals)
+        private async void OnPlayerConnecting([FromSource]Player player, string name, dynamic setKickReason, dynamic deferrals)
         {
             deferrals.defer();
 
@@ -84,6 +84,15 @@ namespace GunGameV.Server
             if (player.Identifiers["steam"] == null)
             {
                 deferrals.done("Steam must be running to connect to this server!");
+            }
+
+            string steam64 = Utilities.GetSteam64(player.Identifiers["steam"]);
+
+            dynamic ban = await Exports["jssql"].executeSync("SELECT ban.reason, UNIX_TIMESTAMP(ban.expire) AS 'expire' FROM ban WHERE player_id = (SELECT id FROM player WHERE steam = ?) AND (UNIX_TIMESTAMP(ban.expire) > UNIX_TIMESTAMP())", new[] { steam64 });
+
+            if (ban.Count != 0)
+            {
+                deferrals.done(string.Format("You have been banned from the server until {0} for {1}", DateTimeOffset.FromUnixTimeSeconds(ban[0].expire).ToString(@"dd/MM/yyyy HH\:mm\:ss UTC"), ban[0].reason));
             }
 
             deferrals.done();
