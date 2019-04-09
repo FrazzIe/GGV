@@ -168,6 +168,7 @@ export default {
       drawer: true,
       menu: false,
       searchDlg: false,
+      searchResultsDlg: false,
       searchField: "",
       searchRules: {
         counter: value => value.length > 3 || 'Too short',
@@ -182,7 +183,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setUser']),
+    ...mapMutations(['setUser', 'setSearch']),
     getUser() {
       let self = this
       axios.get("/api/user").then((resp) => {
@@ -208,6 +209,22 @@ export default {
         });
       }
     },
+    getPlayer(steamid) {
+      let self = this
+      axios.get("api/user/" + steamid).then((resp) => {
+        console.log("Success");
+        if(resp.data.user !== "undefined") {
+          self.setSearch(resp.data.user);
+        } else {
+          self.setSearch(false);
+        }
+        this.searchResultsDlg = false;
+        self.$router.push("/search");
+      }).catch((err) => {
+        console.log(err);
+        self.$router.push("/");        
+      })
+    }
   },
   mounted(){
     this.getUser();
