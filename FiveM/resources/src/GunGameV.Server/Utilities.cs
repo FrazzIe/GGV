@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace GunGameV.Server
 {
-    public static class Utilities
+    public static class Utilities //Class of static data that is referred to
     {
-        private static List<uint> weapons = new List<uint>
+        private static List<uint> weapons = new List<uint> //List of weapons
         {
             //Pistols
             453432689,
@@ -72,7 +72,7 @@ namespace GunGameV.Server
             1672152130,
             125959754,
         };
-        private static List<uint> meleeWeapons = new List<uint>
+        private static List<uint> meleeWeapons = new List<uint> //List of melee weapons
         {
             2578778090,
             1737195953,
@@ -91,19 +91,19 @@ namespace GunGameV.Server
             2484171525,
             419712736,
         };
-        private static List<string> maps = new List<string>
+        private static List<string> maps = new List<string> //List of map names
         {
             "bunker",
             "garage",
             "iaa",
         };
-        public static string GetSteam64(string hex)
+        public static string GetSteam64(string hex) //This function converts a hexidecimal string to a decimal and returns it
         {
             return Convert.ToInt64(hex, 16).ToString();
         }
-        public static long UnixTimestamp { get => DateTimeOffset.UtcNow.ToUnixTimeSeconds(); }
-        public static List<uint> Weapons { get => weapons; }
-        public static List<uint> MeleeWeapons { get => meleeWeapons; }
-        public static List<string> Maps { get => maps; }
+        public static long UnixTimestamp { get => DateTimeOffset.UtcNow.ToUnixTimeSeconds(); } //This class property returns the current unix utc timestamp in seconds
+        public static List<uint> Weapons { get => weapons; } //This class property returns the list of weapons
+        public static List<uint> MeleeWeapons { get => meleeWeapons; } //This class property returns the list of melee weapons
+        public static List<string> Maps { get => maps; } //This class property returns the list of map names
     }
 }
