@@ -1,17 +1,17 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import Router from 'vue-router' //import required libs
 
 import Home from './views/Home.vue'
 import About from './views/About.vue'
 import Dashboard from './views/Dashboard.vue'
-import Search from './views/Search.vue'
+import Search from './views/Search.vue' //Import router vues
 
-Vue.use(Router)
+Vue.use(Router) //Make Vue use Vue-Router
 
-export default new Router({
+export default new Router({ //Define a new router
   //mode: 'history',
   //base: process.env.BASE_URL,
-  routes: [
+  routes: [ //A list of paths and names that link to components
     {
       path: '/',
       name: 'home',

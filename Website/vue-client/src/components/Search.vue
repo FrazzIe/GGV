@@ -11,7 +11,7 @@
             <img src="../assets/rifle.svg" width="200" height="200" alt="weapon image">
           </v-flex>
           <v-flex xs>
-            <span class="subheading">{{ search.kills }}</span>
+            <span class="subheading">{{ search.kills }}</span> <!-- display kills -->
           </v-flex>
         </v-layout>
       </v-flex>
@@ -24,7 +24,7 @@
             <img src="../assets/skull.svg" width="200" height="200" alt="skull image">
           </v-flex>
           <v-flex xs>
-            <span class="subheading">{{ search.deaths }}</span>
+            <span class="subheading">{{ search.deaths }}</span> <!-- display deaths -->
           </v-flex>
         </v-layout>
       </v-flex>
@@ -37,7 +37,7 @@
             <img src="../assets/winner.svg" width="200" height="200" alt="star image">
           </v-flex>
           <v-flex xs>
-            <span class="subheading">{{ search.wins }}</span>
+            <span class="subheading">{{ search.wins }}</span> <!-- display wins -->
           </v-flex>
         </v-layout>
       </v-flex>
@@ -50,7 +50,7 @@
             <img src="../assets/stairs.svg" width="200" height="200" alt="lose image">
           </v-flex>
           <v-flex xs>
-            <span class="subheading">{{ search.games_played - search.wins }}</span>
+            <span class="subheading">{{ search.games_played - search.wins }}</span> <!-- display losses -->
           </v-flex>
         </v-layout>
       </v-flex>
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-  import { mapState, mapMutations } from 'vuex';
+  import { mapState, mapMutations } from 'vuex'; //import vuex data
 
   export default {
     data () {
@@ -74,7 +74,7 @@
       }
     },
     computed: {
-      ...mapState(['search'])
+      ...mapState(['search']) //reference a property thats stored in vuex
     },
   }
 </script>

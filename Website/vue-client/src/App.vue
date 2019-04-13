@@ -155,79 +155,77 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
-import axios from 'axios';
+import { mapState, mapMutations } from 'vuex'; //import vuex data
+import axios from 'axios'; //import axios
 
 export default {
   name: 'App',
   components: {
 
   },
-  data () {
+  data () { //variables
     return {
-      drawer: true,
-      menu: false,
-      searchDlg: false,
-      searchResultsDlg: false,
-      searchField: "",
-      searchRules: {
-        counter: value => value.length > 3 || 'Too short',
+      drawer: true, //bool that is tied to wheather the navigation drawer is open or closed
+      menu: false, //bool that is tied to wheather the user menu in the top right is open or closed
+      searchDlg: false, //bool that is tied to wheather the search dialog is visible or not
+      searchResultsDlg: false, //bool that is tied to wheather the search results ddialog is visible or not
+      searchField: "", //string that is tied to the v-text-field in the search dialog
+      searchRules: { //validation rules that is tied to the v-text-fiel in the search dialog
+        counter: value => value.length > 3 || 'Too short', //Makes sure the string is greater than 3 characters long
       },
-      searchResults: []
+      searchResults: [] //Array of search results
     }
   },
-  computed: {
-    ...mapState(['navigation', 'userNavigation', 'user']),
-    currentYear(){
+  computed: { //computed variables
+    ...mapState(['navigation', 'userNavigation', 'user']), //variables stored in vuex
+    currentYear(){ //Used for displaying the year in the copyright notice
       return new Date().getFullYear();
     }
   },
-  methods: {
-    ...mapMutations(['setUser', 'setSearch']),
-    getUser() {
-      let self = this
-      axios.get("/api/user").then((resp) => {
-        if(resp.data.user !== "undefined") {
-          self.setUser(resp.data.user);
+  methods: { //methods
+    ...mapMutations(['setUser', 'setSearch']), //used for setting variables in the vuex store
+    getUser() { //Used to get the user from the server
+      let self = this //lets the vue instance be referenced by self so it can be used in a promise
+      axios.get("/api/user").then((resp) => { //Sends a request to the server
+        if(resp.data.user !== "undefined") { //Check if the user has been returned
+          self.setUser(resp.data.user); //Sets the user in the vuex store to the data returned
         }
-      }).catch((err) => {
-        console.log(err);
-        self.$router.push("/");
+      }).catch((err) => { //If there is an error getting the user
+        console.log(err); //Display error
+        self.$router.push("/"); //Go to homepage
       });
     },
-    findPlayer() {
-      if(this.searchField.length > 3) {
-        let self = this
-        axios.get("/api/search/" + this.searchField).then((resp) => {
-          self.searchResults = resp.data.results;
-          self.searchLoad = false;
-          self.searchDlg = false;
-          self.searchResultsDlg = true;
-        }).catch((err) => {
-          console.log(err);
-          self.$router.push("/");      
+    findPlayer() { //Used to find players who have similar names or steam ids to what was entered in the search field in the search dialog
+      if(this.searchField.length > 3) { //Check if the fields length is greater than 3
+        let self = this //lets the vue instance be referenced by self so it can be used in a promise
+        axios.get("/api/search/" + this.searchField).then((resp) => { //Send a request to the server with the value of the search field
+          self.searchResults = resp.data.results; //Set the array of search results to the array returned from the server
+          self.searchDlg = false; //Set the search dialog to hide
+          self.searchResultsDlg = true; //Set the search results dialog to appear
+        }).catch((err) => { //If there is an error while searching
+          console.log(err); //Display error
+          self.$router.push("/"); //Go to homepage
         });
       }
     },
-    getPlayer(steamid) {
-      let self = this
-      axios.get("api/user/" + steamid).then((resp) => {
-        console.log("Success");
-        if(resp.data.user !== "undefined") {
-          self.setSearch(resp.data.user);
+    getPlayer(steamid) { //Used to find a specific player using their steam id
+      let self = this //lets the vue instance be referenced by self so it can be used in a promise
+      axios.get("api/user/" + steamid).then((resp) => { //Send a request to the server with the value of the steam id
+        if(resp.data.user !== "undefined") { //Check if a result was retuned
+          self.setSearch(resp.data.user); //Sets the search in the vuex store to the data returned
         } else {
-          self.setSearch(false);
+          self.setSearch(false); //Sets the search to false as no data was returned
         }
-        this.searchResultsDlg = false;
-        self.$router.push("/search");
-      }).catch((err) => {
-        console.log(err);
-        self.$router.push("/");        
+        this.searchResultsDlg = false; //Set the search results dialog to hide
+        self.$router.push("/search"); //Navigate to the search page to view the users profile that was searched for
+      }).catch((err) => { //If there is an error while getting a player
+        console.log(err); //Display error
+        self.$router.push("/"); //Go to homepage
       })
     }
   },
-  mounted(){
-    this.getUser();
+  mounted(){ //When page is loaded
+    this.getUser(); //Get the clients details
   }
 }
 </script>

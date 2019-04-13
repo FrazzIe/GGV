@@ -76,7 +76,7 @@
   export default {
     data () {
       return {
-        headers: {
+        headers: { //Data table headers
           kills: [
             {
               text: "Name",
@@ -134,7 +134,7 @@
             }
           ],
         },
-        pagination: {
+        pagination: { //Data tables current page, display order and column auto sort by
           kills: {
             descending: true,
             sortBy: "kills",
@@ -156,7 +156,7 @@
             rowsPerPage: 10
           }
         },
-        statistics: {
+        statistics: { //Data that the Data tables display
           kills: [],
           deaths: [],
           wins: [],
@@ -168,18 +168,18 @@
       ...mapState(['user'])
     },
     methods: {
-      getStatistics() {
-        let self = this
-        axios.get("/api/stats").then((resp) => {
-          self.statistics = resp.data.statistics;
-        }).catch((err) => {
-          console.log(err);
-          self.$router.push("/");
+      getStatistics() { //Gets the top 10 players with the most kills, deaths, wins and losses
+        let self = this //lets the vue instance be referenced by self so it can be used in a promise
+        axios.get("/api/stats").then((resp) => { //Sends a request to the server
+          self.statistics = resp.data.statistics; //Sets the result
+        }).catch((err) => { //If there was an error then
+          console.log(err); //Display error
+          self.$router.push("/"); //Go to homepage
         });
       },
     },
-    mounted() {
-      this.getStatistics();
+    mounted() { //When page is loaded
+      this.getStatistics(); //Get top 10 stats
     }
   }
 </script>
