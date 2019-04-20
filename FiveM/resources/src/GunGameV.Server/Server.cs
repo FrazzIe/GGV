@@ -165,7 +165,10 @@ namespace GunGameV.Server //JsonConvert.SerializeObject is used to convert Objec
                                 if (deathData.weaponhash == 2725352035) //Check if the weapon used to kill the victim was fists
                                 {
                                     victimData.gameStats.Deaths++; //Add a death to the victims user data
-                                    victimData.gameStats.Score--; //Remove a score point from the victims user data
+                                    
+                                    if (victimData.gameStats.Score > 0) { //Prevent a players score from going in the negatives, fix crash in Test case 24
+                                        victimData.gameStats.Score--; //Remove a score point from the victims user data
+                                    }
                                     killerData.gameStats.Kills++; //Add a kill to the killers user data
 
                                     TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users)); //Sync the users list with each client
