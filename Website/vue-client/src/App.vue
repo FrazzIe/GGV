@@ -32,14 +32,14 @@
       </v-btn>
 
       <a href="/login" v-if="!user">
-        <img src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png">
+        <img src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png" alt="Sign in using steam!">
       </a>
 
       <v-menu v-model="menu" :close-on-content-click="false" :nudge-bottom="40" left v-if="user">
         <template v-slot:activator="{ on }">
           <v-btn icon v-if="user" v-on="on">
             <v-avatar size="36px">
-              <img :src="user.avatar">
+              <img :src="user.avatar" alt="profile picture">
             </v-avatar>
           </v-btn>
         </template>
@@ -48,7 +48,7 @@
           <v-list>
             <v-list-tile>
               <v-list-tile-avatar>
-                <img :src="user.avatar">
+                <img :src="user.avatar" alt="profile picture">
               </v-list-tile-avatar>
 
               <v-list-tile-content>
@@ -123,7 +123,7 @@
             <v-list>
               <v-list-tile v-for="(usr, index) in searchResults" :key="usr.id">
                 <v-list-tile-avatar>
-                  <img :src="usr.avatarfull">
+                  <img :src="usr.avatarfull" alt="profile picture">
                 </v-list-tile-avatar>
 
                 <v-list-tile-content>
