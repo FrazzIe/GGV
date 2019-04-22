@@ -48,7 +48,7 @@ namespace GunGameV.Server //JsonConvert.SerializeObject is used to convert Objec
                             }
                         }
 
-                        Exports["jssql"].execute("UPDATE player SET kills=kills + ?, deaths=deaths + ?, games_played=games_played + 1 WHERE steam=?", new object[] { user.gameStats.Kills, user.gameStats.Deaths, user.Steam }); //Update the users kills, deaths and gamesplayed in the database
+                        Exports["ghmattimysql"].execute("UPDATE player SET kills=kills + ?, deaths=deaths + ?, games_played=games_played + 1 WHERE steam=?", new object[] { user.gameStats.Kills, user.gameStats.Deaths, user.Steam }); //Update the users kills, deaths and gamesplayed in the database
                         user.InMatch = false; //Remove the user from the match as it is now finished
                         user.globalStats.Update(user.gameStats); //Update the users stats locally
                     }
@@ -56,7 +56,7 @@ namespace GunGameV.Server //JsonConvert.SerializeObject is used to convert Objec
                     if (currentMatch.Winner != null) //If a winner has been determine then
                     {
                         currentMatch.Winner.globalStats.Wins++; //Increment the winners wins by one locally
-                        Exports["jssql"].execute("UPDATE player SET wins=wins+1 WHERE steam=?", new[] { currentMatch.Winner.Steam }); //Increment the wins column in the database
+                        Exports["ghmattimysql"].execute("UPDATE player SET wins=wins+1 WHERE steam=?", new[] { currentMatch.Winner.Steam }); //Increment the wins column in the database
                         TriggerClientEvent("chat:addMessage", new
                         {
                             color = new[] { 255, 0, 0 },
@@ -89,7 +89,7 @@ namespace GunGameV.Server //JsonConvert.SerializeObject is used to convert Objec
 
             string steam64 = Utilities.GetSteam64(player.Identifiers["steam"]); //Convert the users steam id from hexidecimal to decimal
 
-            dynamic ban = await Exports["jssql"].executeSync("SELECT ban.reason, UNIX_TIMESTAMP(ban.expire) AS 'expire' FROM ban WHERE player_id = (SELECT id FROM player WHERE steam = ?) AND (UNIX_TIMESTAMP(ban.expire) > UNIX_TIMESTAMP())", new[] { steam64 }); //Check if the user is banned in the database
+            dynamic ban = await Exports["ghmattimysql"].executeSync("SELECT ban.reason, UNIX_TIMESTAMP(ban.expire) AS 'expire' FROM ban WHERE player_id = (SELECT id FROM player WHERE steam = ?) AND (UNIX_TIMESTAMP(ban.expire) > UNIX_TIMESTAMP())", new[] { steam64 }); //Check if the user is banned in the database
 
             if (ban.Count != 0) //If a result has been returned then
             {
@@ -105,11 +105,11 @@ namespace GunGameV.Server //JsonConvert.SerializeObject is used to convert Objec
 
             string steam64 = Utilities.GetSteam64(player.Identifiers["steam"]); //Convert the users steam id from hexidecimal to decimal
 
-            Exports["jssql"].execute("SELECT wins, games_played, kills, deaths FROM player WHERE steam = ?", new[] { steam64 }, new Action<dynamic>((result) => //Find a users statistics in the database
+            Exports["ghmattimysql"].execute("SELECT wins, games_played, kills, deaths FROM player WHERE steam = ?", new[] { steam64 }, new Action<dynamic>((result) => //Find a users statistics in the database
             {
                 if (result.Count == 0) //If no result was found then
                 {
-                    Exports["jssql"].execute("INSERT INTO player (`steam`, `license`, `ip`, `name`) VALUES (?, ?, ?, ?)", new[] { steam64, player.Identifiers["license"], player.EndPoint, player.Name }); //Insert a new user into the database
+                    Exports["ghmattimysql"].execute("INSERT INTO player (`steam`, `license`, `ip`, `name`) VALUES (?, ?, ?, ?)", new[] { steam64, player.Identifiers["license"], player.EndPoint, player.Name }); //Insert a new user into the database
 
                     Users.Add(new User(player.Handle, player.Name, steam64, player.Identifiers["license"], player.EndPoint)); //Create a new user instance and add the user to the users list
 
@@ -119,7 +119,7 @@ namespace GunGameV.Server //JsonConvert.SerializeObject is used to convert Objec
                 {
                     Users.Add(new User(player.Handle, player.Name, steam64, player.Identifiers["license"], player.EndPoint, result[0].kills, result[0].deaths, result[0].wins, result[0].games_played)); //Create a new user instance and add the user to the users list
 
-                    Exports["jssql"].execute("UPDATE player SET ip=?, name=? WHERE steam=?", new[] { player.EndPoint, player.Name, steam64 }); //Update the users name and ip address in the database
+                    Exports["ghmattimysql"].execute("UPDATE player SET ip=?, name=? WHERE steam=?", new[] { player.EndPoint, player.Name, steam64 }); //Update the users name and ip address in the database
 
                     TriggerClientEvent("GGV.Sync.Users", JsonConvert.SerializeObject(users)); //Sync the users list with each client
                 }
@@ -189,13 +189,13 @@ namespace GunGameV.Server //JsonConvert.SerializeObject is used to convert Objec
 
                                             foreach (User user in usersInMatch) //Loop through each user
                                             {
-                                                Exports["jssql"].execute("UPDATE player SET kills=kills + ?, deaths=deaths + ?, games_played=games_played + 1 WHERE steam=?", new object[] { user.gameStats.Kills, user.gameStats.Deaths, user.Steam }); //Update the users kills, deaths and gamesplayed in the database
+                                                Exports["ghmattimysql"].execute("UPDATE player SET kills=kills + ?, deaths=deaths + ?, games_played=games_played + 1 WHERE steam=?", new object[] { user.gameStats.Kills, user.gameStats.Deaths, user.Steam }); //Update the users kills, deaths and gamesplayed in the database
                                                 user.InMatch = false; //Remove the user from the match as it is now finishe
                                                 user.globalStats.Update(user.gameStats); //Update the users stats locally
                                             }
 
                                             currentMatch.Winner.globalStats.Wins++; //Increment the winners wins by one locally
-                                            Exports["jssql"].execute("UPDATE player SET wins=wins+1 WHERE steam=?", new[] { currentMatch.Winner.Steam }); //Increment the wins column in the database
+                                            Exports["ghmattimysql"].execute("UPDATE player SET wins=wins+1 WHERE steam=?", new[] { currentMatch.Winner.Steam }); //Increment the wins column in the database
                                             TriggerClientEvent("chat:addMessage", new
                                             {
                                                 color = new[] { 255, 0, 0 },
@@ -269,7 +269,7 @@ namespace GunGameV.Server //JsonConvert.SerializeObject is used to convert Objec
 
                                         if (user != null) //Check if the user instance exists
                                         {
-                                            Exports["jssql"].execute("INSERT INTO ban (`player_id`, `reason`, `expire`) VALUES ((SELECT id FROM player WHERE steam = ?),?, FROM_UNIXTIME(?))", new object[] { user.Steam, args[3], expire }); //Insert player ban into the database
+                                            Exports["ghmattimysql"].execute("INSERT INTO ban (`player_id`, `reason`, `expire`) VALUES ((SELECT id FROM player WHERE steam = ?),?, FROM_UNIXTIME(?))", new object[] { user.Steam, args[3], expire }); //Insert player ban into the database
 
                                             string banTime = DateTimeOffset.FromUnixTimeSeconds(expire).ToString(@"dd/MM/yyyy HH\:mm\:ss UTC"); //Convert unix timestamp to human readable date and time
                                             
