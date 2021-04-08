@@ -75,11 +75,11 @@ namespace GunGameV.Client
                     }
                 }
 
-                for (int i = 0; i < 255; i++) //Loop through all possible player indexes
+                foreach (Player id in Players) //Loop through all possible player indexes
                 {
-                    if (API.NetworkIsPlayerActive(i)) //Check if this is a player
+                    if (API.NetworkIsPlayerActive(id.Handle)) //Check if this is a player
                     {
-                        API.SetCanAttackFriendly(API.GetPlayerPed(i), user.InMatch, user.InMatch); //Set wheather or not the player can kill others depending on if they are in a game
+                        API.SetCanAttackFriendly(API.GetPlayerPed(id.Handle), user.InMatch, user.InMatch); //Set wheather or not the player can kill others depending on if they are in a game
                         API.NetworkSetFriendlyFireOption(user.InMatch); //Set wheather or not the player can kill others depending on if they are in a game
                     }
                 }
